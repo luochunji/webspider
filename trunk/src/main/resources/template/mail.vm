@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+</head>
+<body>
+
+    #foreach($result in $result.entrySet())
+##    <li>$member.key - $member.value.firstname $member.value.lastname</li>
+    关键字：$result.key
+    <table width="98%" border="1" cellspacing="1" cellpadding="3" align="center">
+        <tr bgcolor="6f8ac4">
+            <td style="color: #FFFFFF;">产品名称</td>
+            <td style="color: #FFFFFF;">产品链接</td>
+            <td style="color: #FFFFFF;">店铺名称</td>
+            <td style="color: #FFFFFF;">店铺链接</td>
+            <td style="color: #FFFFFF;">产品类型</td>
+            <td style="color: #FFFFFF;">产品种类</td>
+            <td style="color: #FFFFFF;"><font color="#FF0000">价格</font></td>
+            <td style="color: #FFFFFF;">更新时间</td>
+            </td>
+        </tr>
+        <tbody>
+        <!--LOOP START-->
+        #foreach($product in $result.value)
+            <tr bgcolor="f5f5f5">
+                <td>$product.productName</td>
+                <td><a href="$product.productUrl" target="_blank">产品链接</a></td>
+                <td>$product.storeName</td>
+                <td><a href="$product.storeUrl" target="_blank">店铺链接</a></td>
+                <td>$product.category</td>
+                <td>$product.type</td>
+                <td><font color="#FF0000">$product.price</font></td>
+                <td>$product.timeStamp</td>
+            </tr>
+        #end
+        <!--LOOP END-->
+        </tbody>
+    </table>
+    #end
+</body>
+</html>
