@@ -40,6 +40,7 @@
         <quartz.version>2.2.1</quartz.version>
         <webmagic.version>0.5.1</webmagic.version>
         <javacsv.version>2.0</javacsv.version>
+        <ojdbc.version>5.0</ojdbc.version>
     </properties>
     <dependencies>
         <dependency>
@@ -90,6 +91,12 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql.jdbc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ojdbc.ojdbc</groupId>
+            <artifactId>ojdbc</artifactId>
+            <version>${ojdbc.version}</version>
+            <scope>compile</scope>
         </dependency>
 
         <!-- BoneCP -->
@@ -243,6 +250,16 @@
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity</artifactId>
             <version>1.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.8</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.8</version>
         </dependency>
     </dependencies>
     <build>
