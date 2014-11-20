@@ -101,9 +101,9 @@ public class TaskAction {
      * @param modelMap
      * @return
      */
-    @RequestMapping("/addRuntimeUI")
-    public String addRuntimeUI(String id ,ModelMap modelMap){
-        return "task/add_runtime";
+    @RequestMapping("/addParamsUI")
+    public String addParamsUI(String id ,ModelMap modelMap){
+        return "task/addParams";
     }
 
     /**
@@ -111,20 +111,22 @@ public class TaskAction {
      * @param modelMap
      * @return
      */
-    @RequestMapping("/modifyRuntimeUI")
-    public String modifyRuntimeUI(ModelMap modelMap){
+    @RequestMapping("/modifyParamsUI")
+    public String modifyParamsUI(ModelMap modelMap){
         modelMap.put("runtimeMap",taskRuntimeService.getNormalTaskRuntimeMap());
-        return "task/modify_runtime";
+        modelMap.put("paramsMap",Constant.SYSTEM_PARAMS);
+        return "task/modifyParams";
     }
+
     /**
      * 添加任务运行时间
-     * @param runtime
+     * @param bean
      * @return
      */
-    @RequestMapping("/addRuntime")
-    public String addRuntime(String runtime){
-        if(StringUtils.isNotEmpty(runtime)){
-            String[] runtimes = runtime.split(",");
+    @RequestMapping("/addParams")
+    public String addParams(@ModelAttribute("taskForm")ParamsBean bean){
+        if(StringUtils.isNotEmpty(bean.getRuntime())){
+            String[] runtimes = bean.getRuntime().split(",");
             for(String rt : runtimes){
                 if(StringUtils.isNotEmpty(rt)){
                     TaskRuntime tr = new TaskRuntime();
@@ -138,26 +140,24 @@ public class TaskAction {
                 }
             }
         }
-
+        saveEmail(bean);
         return "redirect:/task/list";
     }
 
     /**
-     * 修改任务运行时间
-     * @param runtime
+     * 修改运行参数
+     * @param bean
      * @return
      */
-    @RequestMapping("/modifyRuntime")
-    public String modifyRuntime(String runtime){
+    @RequestMapping("/modifyParams")
+    public String modifyParams(@ModelAttribute("runtimeForm") ParamsBean bean){
         Map<String,TaskRuntime> map = taskRuntimeService.getNormalTaskRuntimeMap();
         for(String key : map.keySet()){
             TaskRuntime tr = map.get(key);
             schedulerService.removeTrigdger(tr.getId());
             taskRuntimeService.delete(tr.getId());
         }
-        this.addRuntime(runtime);
-
-
+        this.addParams(bean);
         return "redirect:/task/list";
     }
 
@@ -205,31 +205,13 @@ public class TaskAction {
         return "task/list";
     }
 
-    /**
-     * 跳转至添加邮箱页面
-     * @param modelMap
-     * @return
-     */
-    @RequestMapping("/addEmailUI")
-    public String addEmailUI(ModelMap modelMap){
-        modelMap.put("paramsMap",Constant.SYSTEM_PARAMS);
-        return "/task/add_email";
-    }
-
-    /**
-     * 保存邮箱
-     * @param bean
-     * @return
-     */
-    @RequestMapping("/saveEmail")
-    public String saveEmail(@ModelAttribute("paramsForm")ParamsBean bean){
+    private void saveEmail(ParamsBean bean){
         SystemParams sp = new SystemParams();
         sp.setId(bean.getId());
         sp.setParamKey(bean.getParamKey());
         sp.setParamValue(bean.getParamValue());
         systemParamsService.update(sp);
         systemParamsService.reload();
-        return "redirect:/task/list";
     }
 
     /*********** 景区任务  END ***********/

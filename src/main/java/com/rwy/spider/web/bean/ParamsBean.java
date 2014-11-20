@@ -11,6 +11,8 @@ public class ParamsBean {
 
     private String paramValue;
 
+    private String runtime;
+
     public String getId() {
         return id;
     }
@@ -33,5 +35,13 @@ public class ParamsBean {
 
     public void setParamValue(String paramValue) {
         this.paramValue = paramValue;
+    }
+
+    public String getRuntime() {
+        return runtime;
+    }
+
+    public void setRuntime(String runtime) {
+        this.runtime = runtime;
     }
 }

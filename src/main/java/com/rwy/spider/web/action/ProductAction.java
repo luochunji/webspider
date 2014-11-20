@@ -31,7 +31,7 @@ public class ProductAction {
 
 
     @RequestMapping("/showResult")
-    public String showResult(@ModelAttribute("productForm") ProductBean bean,ModelMap modelMap){
+    public String showResult(@ModelAttribute("productForm") ProductBean bean,ModelMap modelMap) throws Exception{
         PageView<Product> pageView = new PageView<Product>(12,bean.getPage());
         bean.setClazz("ProductResult");
         modelMap.put("pageView", productService.getAnalyseResult(bean, pageView, ProductResult.class));
@@ -43,7 +43,7 @@ public class ProductAction {
     }
 
     @RequestMapping("/showHistory")
-    public String showHistory(@ModelAttribute("productForm") ProductBean bean,ModelMap modelMap){
+    public String showHistory(@ModelAttribute("productForm") ProductBean bean,ModelMap modelMap) throws Exception{
         PageView<Product> pageView = new PageView<Product>(12,bean.getPage());
         modelMap.put("pageView", productService.getAnalyseResult(bean, pageView, ProductHistory.class));
         modelMap.put("scenicMap",scenicService.getScenicMap());
@@ -55,7 +55,7 @@ public class ProductAction {
     }
 
     @RequestMapping("/showTempResult")
-    public String showTempResult(@ModelAttribute("productForm") ProductBean bean,ModelMap modelMap){
+    public String showTempResult(@ModelAttribute("productForm") ProductBean bean,ModelMap modelMap) throws Exception{
         PageView<Product> pageView = new PageView<Product>(12,bean.getPage());
         modelMap.put("pageView", productService.getAnalyseResult(bean, pageView, ProductTempResult.class));
         modelMap.put("scenicMap",scenicService.getScenicMap());
@@ -65,8 +65,9 @@ public class ProductAction {
         modelMap.put("clazz","ProductTempResult");
         return "product/list";
     }
+    /*
     @RequestMapping("/showTempHistory")
-    public String showTempHistory(@ModelAttribute("productForm") ProductBean bean,ModelMap modelMap){
+    public String showTempHistory(@ModelAttribute("productForm") ProductBean bean,ModelMap modelMap) throws Exception{
         PageView<Product> pageView = new PageView<Product>(12,bean.getPage());
         modelMap.put("pageView", productService.getAnalyseResult(bean, pageView, ProductTempHistory.class));
         modelMap.put("scenicMap",scenicService.getScenicMap());
@@ -76,6 +77,7 @@ public class ProductAction {
         modelMap.put("clazz","ProductTempHistory");
         return "product/list";
     }
+    */
 
     @RequestMapping("/exportExcel")
     public void exportResult(@ModelAttribute("productForm")ProductBean bean,HttpServletResponse response){
@@ -85,7 +87,7 @@ public class ProductAction {
                 ids = bean.getIds().split(",");
             }
             Class clazz = Class.forName("com.rwy.spider.bean.product."+bean.getClazz());
-            List<ProductDto> dtoList = productService.getExportResultList(ids,clazz);
+            List<ProductDto> dtoList = productService.getExportResultList(bean,ids,clazz);
             ExportExcelUtils.exportExcelToBrowser(response,ProductDto.class,dtoList,"测试文件.xls");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

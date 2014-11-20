@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
@@ -14,18 +15,18 @@
 </head>
 <script>
     $(document).ready(function() {
-        $("#set_runtime").click(function() {
-            tipsWindown("设置运行时间","url:get?<%=request.getContextPath()%>/task/addRuntimeUI","350","160","true","","true","text");
+        $("#setParams").click(function() {
+            tipsWindown("设置参数","url:get?<%=request.getContextPath()%>/task/addParamsUI","350","160","true","","true","text");
         });
-        $("#edit_runtime").click(function() {
-            tipsWindown("编辑运行时间","url:get?<%=request.getContextPath()%>/task/modifyRuntimeUI","350","160","true","","true","text");
+        $("#editParams").click(function() {
+            tipsWindown("编辑参数","url:get?<%=request.getContextPath()%>/task/modifyParamsUI","400","300","true","","true","text");
         });
-        $("#set_email").click(function() {
+        /*$("#set_email").click(function() {
             tipsWindown("设置邮箱地址","url:get?<%=request.getContextPath()%>/task/addEmailUI","350","160","true","","true","text");
         });
         $("#edit_email").click(function() {
             tipsWindown("编辑邮箱地址","url:get?<%=request.getContextPath()%>/task/addEmailUI","350","160","true","","true","text");
-        });
+        });*/
     });
     function reSubmit(){
         $("#taskForm").submit();
@@ -75,26 +76,29 @@
     <table width="98%" border="0" cellspacing="1" cellpadding="3" align="center">
         <tr bgcolor="6f8ac4">
             <td style="color: #FFFFFF;">
-                <div style="float: left;">搜索时间：</div>
+                <div style="float: left;">运行参数：</div>
                     <c:if test="${empty runtimeMap}">
-                        <input type="button" id="set_runtime" value="设置"/>
+                        <input type="button" id="setParams" value="设置"/>
                     </c:if>
                     <c:if test="${!empty runtimeMap}">
                         <c:forEach items="${runtimeMap}" var="rt">
                             <div style="float: left;margin-right: 10px">${rt.value.runtime}</div>
                         </c:forEach>
-                        <a href="#" id="edit_runtime">编辑</a>
                     </c:if>
             </td>
             <td style="color: #FFFFFF;">
                 <div style="float: left;">邮件地址：</div>
-                <c:if test="${empty bean.params['email']}">
-                    <input type="button" id="set_email" value="设置"/>
-                </c:if>
                 <c:if test="${!empty bean.params['email']}">
-                        <div style="float: left;margin-right: 10px">${bean.params['email'].paramValue}</div>
-                        <a href="#" id="edit_email">编辑</a>
+                        <div style="float: left;margin-right: 10px" title="${bean.emailTitle}">
+                            <c:if test="${fn:length(bean.params['email'].paramValue)>25}">
+                                ${fn:substring(bean.params['email'].paramValue, 0,25)}...
+                            </c:if>
+                            <c:if test="${fn:length(bean.params['email'].paramValue)<=25}">
+                                ${bean.params['email'].paramValue}
+                            </c:if>
+                        </div>
                 </c:if>
+                <a href="#" id="editParams">编辑</a>
             </td>
         </tr>
     </table>

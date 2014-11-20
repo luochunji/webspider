@@ -29,13 +29,13 @@ public interface ProductService extends DAO<Product> {
      * @param pageView
      * @return
      */
-    public PageView getAnalyseResult(ProductBean bean, PageView pageView,Class clazz);
+    public PageView getAnalyseResult(ProductBean bean, PageView pageView,Class clazz) throws Exception;
 
     public List<Product> isProductExist(String md5code);
 
     public void updateProduct(Product oldProduct,Product newProduct);
 
-    public List<ProductDto> getExportResultList(String[] ids,Class clazz);
+    public List<ProductDto> getExportResultList(ProductBean bean,String[] ids,Class clazz);
 
 
 }

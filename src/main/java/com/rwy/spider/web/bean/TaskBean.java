@@ -1,7 +1,9 @@
 package com.rwy.spider.web.bean;
 
+import com.rwy.spider.bean.system.SystemParams;
 import com.rwy.spider.constant.Constant;
 import com.rwy.spider.web.common.PageBean;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -26,6 +28,8 @@ public class TaskBean extends PageBean implements Serializable{
     private String runtime;
 
     private Map params = Constant.SYSTEM_PARAMS;
+
+    private String emailTitle;
 
     public String getId() {
         return id;
@@ -89,5 +93,22 @@ public class TaskBean extends PageBean implements Serializable{
 
     public void setRuntime(String runtime) {
         this.runtime = runtime;
+    }
+
+    public String getEmailTitle() {
+        Object paramObj = params.get("email");
+        emailTitle = "";
+        if(null!=paramObj){
+            SystemParams sp = (SystemParams) paramObj;
+            String[] emails = sp.getParamValue().split(";");
+            for(String email : emails){
+                emailTitle += email+"&#10";
+            }
+        }
+        return emailTitle;
+    }
+
+    public void setEmailTitle(String emailTitle) {
+        this.emailTitle = emailTitle;
     }
 }

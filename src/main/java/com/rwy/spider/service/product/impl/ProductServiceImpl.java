@@ -7,6 +7,8 @@ import com.rwy.spider.web.bean.ProductBean;
 import com.rwy.spider.web.common.PageView;
 import com.rwy.spider.web.dto.ProductDto;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.Query;
@@ -79,7 +81,7 @@ public class ProductServiceImpl extends DaoSupport<Product> implements ProductSe
     }
 
     @Override
-    public PageView getAnalyseResult(ProductBean bean, PageView pageView,Class clazz) {
+    public PageView getAnalyseResult(ProductBean bean, PageView pageView,Class clazz) throws Exception{
         //排序
         LinkedHashMap<String, String> orderby = buildOrder(bean.getSort());
         StringBuffer jpql = new StringBuffer("");
@@ -88,7 +90,7 @@ public class ProductServiceImpl extends DaoSupport<Product> implements ProductSe
         jpql.append(" from Scenic s,PlatForm p,"+DaoSupport.getEntityName(clazz)+" o");
         jpql.append(" where s.id = o.scenicId and p.id = o.platFormId");
         if(bean.getFilterStore()!= null && !"".equals(bean.getFilterStore())){
-            jpql.append(" and ");
+            jpql.append(" and");
             if("ourStore".equals(bean.getFilterStore())){
                 jpql.append(" o.storeName in (select store.storeName from AgencyStore store)");
             }else if("otherStore".equals(bean.getFilterStore())){
@@ -96,15 +98,27 @@ public class ProductServiceImpl extends DaoSupport<Product> implements ProductSe
             }
         }
         if(bean.getPlatFormId()!= null && bean.getPlatFormId()!=0){
-            jpql.append(" and ");
+            jpql.append(" and");
             jpql.append(" o.platFormId=?").append((params.size()+1));
             params.add(bean.getPlatFormId());
         }
         String keyword = bean.getKeyword();
         if(null!=keyword && !"".equals(keyword)){
-            jpql.append(" and ");
+            jpql.append(" and");
             jpql.append(" concat(s.scenicName,o.type,o.category,o.storeName) like ?").append(params.size()+1);
             params.add("%"+ keyword +"%");
+        }
+        if(null!=bean.getStartDate() && !"".equals(bean.getStartDate())){
+            Date startDate = DateUtils.parseDate(bean.getStartDate(),"yyyy-MM-dd");
+            jpql.append(" and");
+            jpql.append(" o.timeStamp >=?").append(params.size()+1);
+            params.add(startDate);
+        }
+        if(null!=bean.getEndDate() && !"".equals(bean.getEndDate())){
+            Date endDate = DateUtils.parseDate(bean.getEndDate(),"yyyy-MM-dd");
+            jpql.append(" and");
+            jpql.append(" o.timeStamp <=?").append(params.size()+1);
+            params.add(endDate);
         }
         pageView.setQueryResult(getCustomerScrollData(pageView.getFirstResult(),
                 pageView.getMaxresult(), jpql.toString(),null, params.toArray(), orderby));
@@ -142,17 +156,24 @@ public class ProductServiceImpl extends DaoSupport<Product> implements ProductSe
     }
 
     @Override
-    public List<ProductDto> getExportResultList(String[] ids, Class clazz) {
+    public List<ProductDto> getExportResultList(ProductBean bean,String[] ids,Class clazz) {
         StringBuilder jpql = new StringBuilder("");
+        List<Object> params = new ArrayList<Object>();
         jpql.append(" select new com.rwy.spider.web.dto.ProductDto(o.id,s.scenicName, o.type, o.category, o.price, o.low_price, p.name, o.productUrl, o.storeName, o.timeStamp)");
         jpql.append(" from Scenic s,PlatForm p,"+DaoSupport.getEntityName(clazz)+" o");
         jpql.append(" where s.id = o.scenicId and p.id = o.platFormId ");
         if(null!=ids && 0!=ids.length){
-            jpql.append(" and o.id in (?1)");
+            jpql.append(" and o.id in (?").append(params.size()+1).append(")");
+            params.add(Arrays.asList(ids));
+        }
+        if(null!=bean.getKeyword() && !"".equals(bean.getKeyword())){
+            jpql.append(" and ");
+            jpql.append(" concat(s.scenicName,o.type,o.category,o.storeName) like ?").append(params.size()+1);
+            params.add("%"+ bean.getKeyword() +"%");
         }
         Query query = em.createQuery(jpql.toString());
-        if(null!=ids && 0!=ids.length){
-            query.setParameter(1, Arrays.asList(ids));
+        for(int i=0;i<params.size();i++){
+            query.setParameter(i+1, params.get(i));
         }
         List<ProductDto> dtoList = query.getResultList();
         return dtoList;

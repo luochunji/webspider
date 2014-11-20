@@ -9,7 +9,13 @@
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-1.7.2.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/FoshanRen.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/common.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/js/My97DatePicker/WdatePicker.js"></script>
     <script>
+        $(function () {
+            $('.Wdate').live('focus', function() {
+                WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'});
+            });
+        });
         function reSubmit(){
             $("#productForm").submit();
 
@@ -48,7 +54,7 @@
     <input type="hidden" name="page" id="page" value="${bean.page}"/>
     <table width="98%" border="0" cellspacing="1" cellpadding="3" align="center">
         <tr>
-            <td>
+            <td colspan="3">
                 <div class="reorder_l">请选择过滤方式：
                     <c:if test="${'ourStore'==bean.filterStore}"><strong><em>我公司分销商</em></strong></c:if>
                     <c:if test="${'ourStore'!=bean.filterStore}">
@@ -66,7 +72,7 @@
             </td>
         </tr>
         <tr>
-            <td>
+            <td colspan="3">
                 <div class="reorder_l">请选择排序方式：
                     <c:if test="${'pricedesc'==bean.sort}"><strong><em>价格高到低</em></strong></c:if>
                     <c:if test="${'pricedesc'!=bean.sort}">
@@ -97,6 +103,18 @@
                         <a title='默认' href="javascript:filterResult('platFormId','');">所有</a>
                     </c:if>
                 </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <c:if test="${url =='showTempResult' || url =='showHistory'}">
+                    <div style="float: right;margin-right: 20px;">
+                        日期范围：
+                        <input type="text" name="startDate" size="15" class="Wdate" readonly value="${bean.startDate}"/>
+                        -
+                        <input type="text" name="endDate"  size="15" class="Wdate" readonly value="${bean.endDate}"/>
+                    </div>
+                </c:if>
             </td>
             <td>
                 <div style="float: right;margin-right: 20px;">
