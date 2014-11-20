@@ -37,6 +37,10 @@ public class ProductBean extends PageBean implements Serializable {
 
     private String clazz;
 
+    private String startDate;
+
+    private String endDate;
+
     public String getStoreName() {
         return storeName;
     }
@@ -147,5 +151,21 @@ public class ProductBean extends PageBean implements Serializable {
 
     public void setClazz(String clazz) {
         this.clazz = clazz;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 }
