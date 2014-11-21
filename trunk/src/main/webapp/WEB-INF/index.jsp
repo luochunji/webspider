@@ -3,24 +3,91 @@
 <head>
 	<meta charset="UTF-8"/>
 	<title>后台首页</title>
-	<link rel="stylesheet" href="<%=request.getContextPath()%>/css/styles/style.css" type="text/css"/>
-	<script src="<%=request.getContextPath()%>/js/scripts/libs/modernizr/modernizr.js" type="text/javascript"></script>
-	<script src="<%=request.getContextPath()%>/js/scripts/config.js" type="text/javascript"></script>
-    <script src="<%=request.getContextPath()%>/js/jquery-1.7.2.js" type="text/javascript" ></script>
+    <link href="<%=request.getContextPath()%>/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="<%=request.getContextPath()%>/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="<%=request.getContextPath()%>/css/ionicons.min.css" rel="stylesheet" type="text/css" />
+    <link href="<%=request.getContextPath()%>/css/style.css" rel="stylesheet" type="text/css" />
+    <script src="<%=request.getContextPath()%>/js/jquery-2.1.1.min.js" type="text/javascript"></script>
+    <script src="<%=request.getContextPath()%>/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="<%=request.getContextPath()%>/js/app.js" type="text/javascript"></script>
     <script>
         $(document).ready(function() {
-            var main_width = document.body.clientWidth - $("#sidebar").width();
-            var main_height = $(document).height() - $("#secondary_bar").height();
+            var main_width = document.body.clientWidth - 220;
+            var main_height = $(document).height() - 50;
             $("#content").attr("width",main_width);
             $("#content").attr("height",main_height);
             $("#content").attr("src",'<%=request.getContextPath()%>/product/showResult');
         });
         function turnPage(url){
+//            alert($(k).parent());
             $("#content").attr("src",'<%=request.getContextPath()%>'+url);
         }
     </script>
 </head>
-<body>
+<body class="skin-blue home">
+    <header class="header">
+        <div class="user-panel logo">
+            <div class="pull-left image">
+            </div>
+            <div class="pull-left info">
+                <p>欢迎您, 陈玲</p>
+            </div>
+        </div>
+        <nav class="navbar navbar-static-top" role="navigation">
+            <a href="#" class="navbar-btn sidebar-toggle" data-toggle="offcanvas" role="button">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+        </nav>
+    </header>
+    <div class="wrapper row-offcanvas row-offcanvas-left">
+        <aside class="left-side sidebar-offcanvas">
+            <section class="sidebar">
+                <ul class="sidebar-menu">
+                    <li>
+                        <a href="javascript:turnPage('/product/showResult');">
+                            <span>网警首页</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:turnPage('/task/list');">
+                            <span>常规任务列表</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:turnPage('/task/temp/list');">
+                            <span>临时任务列表</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:turnPage('/product/showTempResult');">
+                            <span>临时查询结果</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:turnPage('/agency/list');">
+                            <span>分销网店列表</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:turnPage('/product/showHistory');">
+                            <span>历史搜索数据</span>
+                        </a>
+                    </li>
+                </ul>
+            </section>
+            <!-- /.sidebar -->
+        </aside>
+        <aside class="right-side">
+            <iframe id="content" src="">
+
+            </iframe>
+        </aside>
+        </div>
+
+<%--
 	<header id="header">
 		<hgroup>
 			<h1 class="site_title"><a href="index.html">Website Admin</a></h1>
@@ -56,48 +123,6 @@
 			<li><font class="ficomoon icon-private-msg"></font><a href="javascript:turnPage('/agency/list')">分销商列表</a></li>
 			<li><font class="ficomoon icon-comment"></font><a href="javascript:turnPage('/product/showHistory')">历史数据</a></li>
 		</ul>
-		<%--<h3>用户</h3>
-		<ul class="toggle">
-			<li><font class="ficomoon icon-users"></font><a href="#">会员管理</a></li>
-			<li><font class="ficomoon icon-user-module"></font><a href="#">会员模块设置</a></li>
-			<li><font class="ficomoon icon-user-group"></font><a href="#">会员组管理</a></li>
-		</ul>
-		<h3>设置</h3>
-		<ul class="toggle">
-			<li><font class="ficomoon icon-admin"></font><a href="#">管理员设置</a>
-			<menu class="children dn">
-				<dl>
-					<dd><a href="#">添加管理员</a></dd>
-				</dl>
-			</menu>
-			</li>
-			<li><font class="ficomoon icon-admin-role"></font><a href="#">角色管理</a>
-			<menu class="children dn">
-				<dl>
-					<dd><a href="#">添加角色</a></dd>
-				</dl>
-			</menu>
-			</li>
-			<li><font class="ficomoon icon-browser"></font><a href="#">静态化管理</a>
-			<menu class="children dn">
-				<dl>
-					<dd><a href="#">生成首页</a></dd>
-				</dl>
-			</menu>
-			</li>
-		</ul>
-		<h3>扩展</h3>
-		<ul class="toggle">
-			<li><font class="ficomoon icon-menu"></font><a href="extend_menu.html">菜单管理</a>
-			<menu class="children dn">
-				<dl>
-					<dd><a href="extend_menu_add.html">添加菜单</a></dd>
-				</dl>
-			</menu>
-			</li>
-			<li><font class="ficomoon icon-log"></font><a href="#">操作日志</a></li>
-			<li><font class="ficomoon icon-word"></font><a href="#">敏感词管理</a></li>
-		</ul>--%>
 		<footer>
 			<hr />
 			<p><strong>Copyright &copy; 2014 Pwstrick</strong></p>
@@ -108,6 +133,6 @@
 
 		</iframe>
 	</section>
-	<script src="<%=request.getContextPath()%>/js/scripts/libs/require/require.js" type="text/javascript" data-main="scripts/app/index/main"></script>
+	<script src="<%=request.getContextPath()%>/js/scripts/libs/require/require.js" type="text/javascript" data-main="scripts/app/index/main"></script>--%>
 </body>
 </html>

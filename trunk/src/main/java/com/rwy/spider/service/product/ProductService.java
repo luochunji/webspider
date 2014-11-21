@@ -38,4 +38,5 @@ public interface ProductService extends DAO<Product> {
     public List<ProductDto> getExportResultList(ProductBean bean,String[] ids,Class clazz);
 
 
+    public Map getProductForEmail();
 }

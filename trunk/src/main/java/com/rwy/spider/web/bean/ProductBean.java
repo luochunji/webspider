@@ -29,7 +29,7 @@ public class ProductBean extends PageBean implements Serializable {
 
     private String sort;
 
-    private String filterStore;
+    private String filterStore ="ourStore";
 
     private Long platFormId;
 

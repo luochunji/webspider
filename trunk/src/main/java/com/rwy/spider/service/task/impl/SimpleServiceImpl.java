@@ -77,8 +77,10 @@ public class SimpleServiceImpl {
             }
         }
         //调用存储过程保存分析结果
+        Map map = null;
         if("NORMAL".equals(type)){
             productService.process("{call proc_analysis_result(?1)}",new Timestamp(trigger.getPreviousFireTime().getTime()));
+            map = productService.getProductForEmail();
         }else if("TEMP".equals(type)){
             for(Task task : taskList){
                 task.setStatus("RUNNED");
@@ -90,17 +92,15 @@ public class SimpleServiceImpl {
         Long time = endDate - startDate;
         logger.info("本次耗时："+ time);
 
-
-//        Map map = productService.getAnalyseResult();
-//        try {
-//            if(taskScheduler.isSendMail()){
-//                mailService.execute(taskScheduler,map);
-//            }
-//        } catch (MessagingException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            String emailParams = Constant.SYSTEM_PARAMS.get("email").toString();
+            String[] emails = emailParams.split(";");
+            mailService.execute(emails,map);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 }
