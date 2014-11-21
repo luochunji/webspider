@@ -33,7 +33,7 @@ public class TaskServiceImpl extends DaoSupport<Task> implements TaskService{
 
         String keyword = bean.getKeyword();
 
-        jpql.append(" select distinct new com.rwy.spider.web.dto.TaskListDto(s,o) from Scenic s,Task o where s.id = o.scenicId");
+        jpql.append(" select distinct new com.rwy.spider.web.dto.TaskListDto(s,o) from Scenic s,Task o where s.id = o.scenicId and o.runtimeId is null");
 
         if(null!=keyword && !"".equals(keyword)){
             jpql.append(" and ");

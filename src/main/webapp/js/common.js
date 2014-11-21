@@ -1,7 +1,6 @@
 /**
  * Created by Luocj on 2014/11/5.
  */
-
 function changeStatus(str) {
     $(".timeDiv").css("display", "none");
     $("div[id^=" + str+"]").css("display", "block");

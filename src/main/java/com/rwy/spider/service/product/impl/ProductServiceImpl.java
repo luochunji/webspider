@@ -180,6 +180,30 @@ public class ProductServiceImpl extends DaoSupport<Product> implements ProductSe
     }
 
     @Override
+    public Map getProductForEmail() {
+        Map<String,List<ProductDto>> map = new HashMap();
+        StringBuilder jpql = new StringBuilder("");
+        List<Object> params = new ArrayList<Object>();
+        jpql.append(" select new com.rwy.spider.web.dto.ProductDto(o.id,s.scenicName, o.type, o.category, o.price, o.low_price, p.name, o.productUrl, o.storeName, o.timeStamp)");
+        jpql.append(" from Scenic s,PlatForm p,ProductResult o");
+        jpql.append(" where s.id = o.scenicId and p.id = o.platFormId ");
+        Query query = em.createQuery(jpql.toString());
+        List<ProductDto> dtoList = query.getResultList();
+        for(ProductDto dto : dtoList){
+            String key = dto.getScenicName();
+            if(map.containsKey(key)){
+                map.get(key).add(dto);
+            }else{
+                List<ProductDto> pdList = new ArrayList<ProductDto>();
+                pdList.add(dto);
+                map.put(key,pdList);
+            }
+        }
+        dtoList = null;
+        return map;
+    }
+
+    @Override
     public void process(String proce,Object ... objects) {
         Query query = em.createNativeQuery(proce);
         for(int i=0;i<objects.length;i++){

@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
+import java.io.PrintWriter;
 import java.text.ParseException;
 import java.util.*;
 
@@ -68,9 +69,15 @@ public class TaskAction {
      * @return
      */
     @RequestMapping("/modifyTaskUI")
-    public String modifyTaskUI(String id ,ModelMap modelMap){
-        modelMap.put("scenicMap",scenicService.getScenicMap());
-        modelMap.put("task",taskService.find(id));
+    public String modifyTaskUI(String id ,ModelMap modelMap,PrintWriter printWriter){
+        Task task = taskService.find(id);
+        modelMap.put("scenic",scenicService.find(task.getScenicId()));
+        modelMap.put("task",task);
+        modelMap.put("result","success");
+        JSONObject json = JSONObject.fromObject(modelMap);
+        printWriter.write(json.toString());
+        printWriter.flush();
+        printWriter.close();
         return "task/modify";
     }
 
@@ -80,7 +87,7 @@ public class TaskAction {
      * @return
      */
     @RequestMapping("/addTask")
-    public String addTask(TaskBean bean){
+    public String addTask(@ModelAttribute("addTaskForm") TaskBean bean){
         String conditions = bean.getConditions();
         JSONArray jsonArray = JSONArray.fromObject(conditions);
         for(Object obj : jsonArray){
@@ -150,7 +157,7 @@ public class TaskAction {
      * @return
      */
     @RequestMapping("/modifyParams")
-    public String modifyParams(@ModelAttribute("runtimeForm") ParamsBean bean){
+    public String modifyParams(@ModelAttribute("paramForm") ParamsBean bean){
         Map<String,TaskRuntime> map = taskRuntimeService.getNormalTaskRuntimeMap();
         for(String key : map.keySet()){
             TaskRuntime tr = map.get(key);
@@ -201,6 +208,8 @@ public class TaskAction {
         PageView<TaskListDto> pageView = new PageView<TaskListDto>(12,bean.getPage());
         modelMap.put("pageView", taskService.getTaskList(bean,pageView));
         modelMap.put("runtimeMap",taskRuntimeService.getNormalTaskRuntimeMap());
+        modelMap.put("scenicMap",scenicService.getScenicMap());
+        modelMap.put("paramsMap",Constant.SYSTEM_PARAMS);
         modelMap.put("bean",bean);
         return "task/list";
     }
@@ -233,12 +242,16 @@ public class TaskAction {
      * @return
      */
     @RequestMapping("/temp/modifyTaskTempUI")
-    public String modifyTaskTempUI(String id ,ModelMap modelMap){
+    public void modifyTaskTempUI(String id ,ModelMap modelMap,PrintWriter printWriter){
         Task task = taskService.find(id);
-        modelMap.put("scenicMap",scenicService.getScenicMap());
+        modelMap.put("scenic",scenicService.find(task.getScenicId()));
         modelMap.put("task",task);
         modelMap.put("taskRt",taskRuntimeService.find(task.getRuntimeId()));
-        return "task/temp/modify";
+        modelMap.put("result","success");
+        JSONObject json = JSONObject.fromObject(modelMap);
+        printWriter.write(json.toString());
+        printWriter.flush();
+        printWriter.close();
     }
 
     /**
@@ -310,6 +323,7 @@ public class TaskAction {
     public String listTemp(@ModelAttribute("taskForm")TaskBean bean, ModelMap modelMap){
         PageView<TaskListDto> pageView = new PageView<TaskListDto>(12,bean.getPage());
         modelMap.put("pageView", taskService.getTaskTempList(bean,pageView));
+        modelMap.put("scenicMap",scenicService.getScenicMap());
         modelMap.put("bean",bean);
         return "task/temp/list";
     }
