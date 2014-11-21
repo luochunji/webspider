@@ -3,7 +3,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <html>
 <head>
-    <title>编辑搜索时间</title>
+    <title>设置运行参数</title>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-1.7.2.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/common.js"></script>
@@ -37,27 +37,31 @@
     </script>
 </head>
 <body>
-<form action="<%=request.getContextPath()%>/task/modifyRuntime" id="runtimeForm" method="post">
-    <input name="storeInfo" id="storeInfo" type="hidden">
+<form action="<%=request.getContextPath()%>/task/addParams" id="paramsForm" method="post">
+    <input type="hidden" name="paramKey" value="email">
+    <input type="hidden" name="id"  value="${paramsMap['email'].id}">
     <table width="98%" border="0" cellspacing="1" cellpadding="3" align="center">
         <tr bgcolor="f5f5f5">
             <table align="center" id="addTr">
-                <c:forEach items="${runtimeMap}" var="rt" varStatus="index">
-                    <tr class="runtimeInput">
-                        <td width="20%">
-                            <div align="right">运行时间 ：</div>
-                        </td>
-                        <td width="35%">
-                            <input type="text" name="runtime" class="Wdate" value="${rt.value.runtime}" readonly/>
-                        </td>
-                        <c:if test="${index.count == 1}">
-                            <td width="10%"><a href="#" id="getAtr"><font color="#ff1121ff">+</font></a></td>
-                        </c:if>
-                        <c:if test="${index.count >1}">
-                            <td onclick="getDel(this)"><a href="#"><font color="red">-</font></a></td>
-                        </c:if>
-                    </tr>
-                </c:forEach>
+                <tr class="runtimeInput">
+                    <td width="20%">
+                        <div align="right">运行时间 ：</div>
+                    </td>
+                    <td width="35%">
+                        <input type="text" name="runtime" class="Wdate" readonly/>
+                    </td>
+                    <td width="10%"><a href="#" id="getAtr"><font color="#ff1121ff">+</font></a></td>
+                </tr>
+            </table>
+            <table align="center" >
+                <tr class="emailInput">
+                    <td width="20%">
+                        <div align="right">邮件地址 ：</div>
+                    </td>
+                    <td width="35%">
+                        <input type="text" name="paramValue" value="${paramsMap['email'].paramValue}" />
+                    </td>
+                </tr>
             </table>
         </tr>
         <tr bgcolor="f5f5f5">
