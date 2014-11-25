@@ -121,7 +121,7 @@ public class Agency implements Serializable{
         this.creator = creator;
     }
 
-    @OneToMany(mappedBy="agency",cascade=CascadeType.ALL)
+    @OneToMany(mappedBy="agency",cascade={CascadeType.REMOVE,CascadeType.PERSIST})
     public Set<AgencyStore> getAgencyStores() {
         return agencyStores;
     }

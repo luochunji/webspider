@@ -13,13 +13,10 @@
             objForm.submit();
         }
         $(function () {
-            $('.Wdate').live('focus', function() {
-                WdatePicker({skin:'whyGreen',dateFmt:'H:mm:ss'});
-            });
             $("#getAtr").click(function () {
                 var size = $(".runtimeInput").length;
                 if (size == 3) {
-                    alert('抱歉，最多只能设置三个运行时间!');
+                    layer.alert('抱歉，最多只能设置三个运行时间!');
                     return;
                 }
                 var str = '';

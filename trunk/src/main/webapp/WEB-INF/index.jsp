@@ -17,6 +17,10 @@
             $("#content").attr("width",main_width);
             $("#content").attr("height",main_height);
             $("#content").attr("src",'<%=request.getContextPath()%>/product/showResult');
+
+            $('.sidebar-menu li').click(function(){
+                $(this).addClass('active').siblings('li').removeClass('active');
+            })
         });
         function turnPage(url){
 //            alert($(k).parent());

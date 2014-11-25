@@ -103,29 +103,6 @@ public class TaskAction {
     }
 
     /**
-     * 跳转至添加任务运行时间页面
-     * @param id
-     * @param modelMap
-     * @return
-     */
-    @RequestMapping("/addParamsUI")
-    public String addParamsUI(String id ,ModelMap modelMap){
-        return "task/addParams";
-    }
-
-    /**
-     * 跳转至修改任务运行时间页面
-     * @param modelMap
-     * @return
-     */
-    @RequestMapping("/modifyParamsUI")
-    public String modifyParamsUI(ModelMap modelMap){
-        modelMap.put("runtimeMap",taskRuntimeService.getNormalTaskRuntimeMap());
-        modelMap.put("paramsMap",Constant.SYSTEM_PARAMS);
-        return "task/modifyParams";
-    }
-
-    /**
      * 添加任务运行时间
      * @param bean
      * @return

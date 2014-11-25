@@ -1,6 +1,5 @@
 package com.rwy.spider.service.mail.impl;
 
-import com.rwy.spider.bean.task.TaskScheduler;
 import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

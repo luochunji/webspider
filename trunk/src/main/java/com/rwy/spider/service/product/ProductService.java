@@ -24,19 +24,31 @@ public interface ProductService extends DAO<Product> {
     public PageView getProductList(ProductBean bean, PageView pageView);
 
     /**
-     * 查看最新结果
+     * 查看最新的结果
      * @param bean
      * @param pageView
      * @return
      */
     public PageView getAnalyseResult(ProductBean bean, PageView pageView,Class clazz) throws Exception;
 
+    @Deprecated
     public List<Product> isProductExist(String md5code);
 
+    @Deprecated
     public void updateProduct(Product oldProduct,Product newProduct);
 
+    /**
+     * 获取要导出的列表
+     * @param bean
+     * @param ids
+     * @param clazz
+     * @return
+     */
     public List<ProductDto> getExportResultList(ProductBean bean,String[] ids,Class clazz);
 
-
+    /**
+     * 提取分析结果作为email数据
+     * @return
+     */
     public Map getProductForEmail();
 }

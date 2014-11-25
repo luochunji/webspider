@@ -22,6 +22,7 @@
             src="<%=request.getContextPath()%>/js/plugins/daterangepicker/bootstrap-datetimepicker.zh-CN.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/app.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/task.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/js/plugins/layer/layer.min.js"></script>
 </head>
 <script>
     $(document).ready(function () {
@@ -41,21 +42,13 @@
             })
         });
     });
-    function reSubmit(objForm) {
-        objForm.submit();
-
-    }
-    function topage(objForm,page) {
-        $("#page").val(page);
-        reSubmit(objForm);
-    }
     function modifyCheck() {
         var size = $("input[name='ids']:checked").length;
         if (size == 0) {
-            alert("请选择一个修改的景区任务！");
+            layer.alert("请选择一个修改的景区任务！");
             return false;
         } else if (size > 1) {
-            alert("只能选择一个景区任务进行修改！");
+            layer.alert("只能选择一个景区任务进行修改！");
             return false;
         } else {
             var id = $("input[name='ids']:checked").val();
@@ -78,7 +71,7 @@
                     });
                 },
                 error :function(){
-                    alert("网络连接出错！");
+                    layer.alert("网络连接出错！");
                 }
             });
         }
@@ -87,16 +80,26 @@
     function delCheck(objForm) {
         var size = $("input[name='ids']:checked").length;
         if (size == 0) {
-            alert("请至少选择一个要删除的任务！");
+            layer.alert("请至少选择一个要删除的任务！");
             return;
         } else {
-            if (window.confirm('你确定要删除选中的任务吗？')) {
-                var action = '<%=request.getContextPath()%>/task/delTask';
-                $("#taskForm").attr("action", action);
-                reSubmit(objForm);
-            } else {
-                return false;
-            }
+            $.layer({
+                shade: [0],
+                area: ['auto','auto'],
+                dialog: {
+                    msg: '你确定要删除选中的任务吗？',
+                    btns: 2,
+                    type: 9,
+                    btn: ['确定','取消'],
+                    yes: function(){
+                        var action = '<%=request.getContextPath()%>/task/delTask';
+                        objForm.action = action;
+                        reSubmit(objForm);
+                    }, no: function(){
+                        return false
+                    }
+                }
+            });
         }
     }
     function getCondition(objForm){
@@ -194,14 +197,14 @@
                         </c:forEach>
                         </tbody>
                     </table>
-                    <nav>
+                    <nav class="clearfix">
                         <ul class="pagination">
                             <c:forEach begin="${pageView.pageindex.startindex}" end="${pageView.pageindex.endindex}" var="wp">
                                 <c:if test="${pageView.currentpage==wp}"><li class="active"><a href="#" >${wp}</a></li></c:if>
                                 <c:if test="${pageView.currentpage!=wp}"><li><a href="javascript:topage(this.form,${wp})">${wp}</a></li></c:if>
                             </c:forEach>
                         </ul>
-                        <div class="pull-right"><span>共21页</span><span>每页10条记录</span></div>
+                        <%@ include file="/WEB-INF/common/fenye.jsp" %>
                     </nav>
                     <!--end pagination-->
                 </div>
@@ -214,153 +217,14 @@
     <!-- ./wrapper -->
     <!--搜索设置-->
     <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
-        <div class="modal-dialog">
-            <form action="<%=request.getContextPath()%>/task/modifyParams" id="paramForm" method="post">
-                <input type="hidden" name="paramKey" value="email">
-                <input type="hidden" name="id"  value="${paramsMap['email'].id}">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                                class="sr-only">Close</span></button>
-                        <h4 class="modal-title" id="myModalLabel">搜索设置</h4>
-                    </div>
-                    <div class="modal-body">
-                        <table class="tables" width="100%" id="paramTr">
-                            <c:if test="${empty runtimeMap}">
-                                <tr>
-                                    <td align="right">搜索时间：</td>
-                                    <td><input type="text" name="runtime" class="form-control"
-                                               placeholder="请选择发送时间..." required readonly></td>
-                                    <td><a href="#" id="addSearchTime">+</a></td>
-                                </tr>
-                            </c:if>
-                            <c:forEach items="${runtimeMap}" var="rt" varStatus="index">
-                                <tr class="runtimeInput">
-                                    <td align="right">搜索时间：</td>
-                                    <td><input type="text" name="runtime" class="form-control"
-                                               placeholder="请选择发送时间..." value="${rt.value.runtime}" required readonly></td>
-                                    <c:if test="${index.count == 1}">
-                                        <td><a href="#" id="addSearchTime">+</a></td>
-                                    </c:if>
-                                    <c:if test="${index.count >1}">
-                                        <td onclick="getDel(this)"><a href="#">-</a></td>
-                                    </c:if>
-                                </tr>
-                            </c:forEach>
-                        </table>
-                        <table class="tables" width="100%">
-                            <tr>
-                                <td align="right">接收邮箱:</td>
-                                <td><input type="text" class="form-control" name="paramValue" value="${paramsMap['email'].paramValue}" /></td>
-                            </tr>
-                            <tr>
-                                <td colspan="3" align="center" class="tips">
-                                    邮箱可添加多个，请以“；”隔开
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onClick="javascript:reSubmit(this.form)">保存</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="javascript:location.reload();">关闭</button>
-                    </div>
-                </div>
-                <!--end modal-content-->
-            </form>
-
-        </div>
-    </div>
+    <%@ include file="/WEB-INF/task/addParams.jsp" %>
     <!--新增任务-->
     <!-- Modal -->
-    <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <form action="<%=request.getContextPath()%>/task/addTask" id="addTaskForm" method="post">
-                <input type="hidden" name="conditions" id="conditions"/>
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                                class="sr-only">Close</span></button>
-                        <h4 class="modal-title" id="myModalLabel">景区任务录入</h4>
-                    </div>
-                    <div class="modal-body">
-                        <table class="tables" width="100%" id="taskTr">
-                            <tr>
-                                <td align="right">景区名称：</td>
-                                <td colspan="2">
-                                        <select name="scenicId" class="form-control">
-                                            <option value ="" selected>请选择...</option>
-                                            <c:forEach items="${scenicMap}" var ="s">
-                                                <option value ="${s.key}">${s.value}</option>
-                                            </c:forEach>
-                                            <>
-                                        </select>
-                                </td>
-                                <td>
-                                    <a href="<%=request.getContextPath()%>/scenic/addScenicUI">添加景区</a>
-                                </td>
-                            </tr>
-                            <tr class="condition">
-                                <td align="right">关键字:</td>
-                                <td class="inwrap"><input name="keyword" type="text" class="form-control"/></td>
-                                <td align="right">价格:</td>
-                                <td class="inwrap"><input name="price" type="text" class="form-control price" value="00.00"/></td>
-                                <td><a href="#" id="addTask">+</a></td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onclick="javascript:getCondition(this.form)">保存</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    </div>
-                </div>
-                <!--end modal-content-->
-            </form>
-
-        </div>
-    </div>
+    <%@ include file="/WEB-INF/task/add.jsp" %>
     <!--end add-->
     <!--修改-->
     <!-- Modal -->
-    <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <form action="<%=request.getContextPath()%>/task/modifyTask" id="modifyTaskForm" method="post">
-                <input type="hidden" name="id" id="taskId">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                                class="sr-only">Close</span></button>
-                        <h4 class="modal-title" id="myModalLabel">修改</h4>
-                    </div>
-                    <div class="modal-body">
-                        <table class="tables" width="100%">
-                            <tr>
-                                <td align="right">景区名称：</td>
-                                <td colspan="2">
-                                    <input type="text" class="form-control" id="scenicName" disabled/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td align="right">关键字:</td>
-                                <td class="inwrap">
-                                    <input type="text" id="keyword" name="keyword" class="form-control" />
-                                </td>
-                                <td>
-                                    <input type="text" id="price" name="price" class="form-control price" value="00.00"/>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onClick="javascript:reSubmit(this.form)">保存</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    </div>
-                </div>
-                <!--end modal-content-->
-            </form>
-
-        </div>
-    </div>
+    <%@ include file="/WEB-INF/task/modify.jsp" %>
 </body>
 
 <%--<table width="98%" border="0" cellspacing="1" cellpadding="3" align="center">

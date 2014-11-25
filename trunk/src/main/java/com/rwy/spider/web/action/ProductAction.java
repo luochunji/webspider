@@ -1,17 +1,25 @@
 package com.rwy.spider.web.action;
 
-import com.rwy.spider.bean.product.*;
+import com.rwy.spider.bean.product.Product;
+import com.rwy.spider.bean.product.ProductHistory;
+import com.rwy.spider.bean.product.ProductResult;
+import com.rwy.spider.bean.product.ProductTempResult;
+import com.rwy.spider.bean.system.SystemParams;
 import com.rwy.spider.constant.Constant;
+import com.rwy.spider.service.mail.impl.MailServiceImpl;
 import com.rwy.spider.service.product.ProductService;
 import com.rwy.spider.service.scenic.ScenicService;
 import com.rwy.spider.utils.ExportExcelUtils;
 import com.rwy.spider.web.bean.ProductBean;
 import com.rwy.spider.web.common.PageView;
 import com.rwy.spider.web.dto.ProductDto;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -28,59 +36,48 @@ public class ProductAction {
     private ProductService productService;
     @Resource
     private ScenicService scenicService;
+    @Resource
+    private MailServiceImpl mailService;
 
 
     @RequestMapping("/showResult")
     public String showResult(@ModelAttribute("productForm") ProductBean bean,ModelMap modelMap) throws Exception{
         PageView<Product> pageView = new PageView<Product>(12,bean.getPage());
         bean.setClazz("ProductResult");
+        bean.setUrl("showResult");
         modelMap.put("pageView", productService.getAnalyseResult(bean, pageView, ProductResult.class));
         modelMap.put("scenicMap",scenicService.getScenicMap());
         modelMap.put("platFormMap", Constant.PLATFORM_MAP);
         modelMap.put("bean",bean);
-        modelMap.put("url","showResult");
         return "product/list";
     }
 
     @RequestMapping("/showHistory")
     public String showHistory(@ModelAttribute("productForm") ProductBean bean,ModelMap modelMap) throws Exception{
         PageView<Product> pageView = new PageView<Product>(12,bean.getPage());
+        bean.setClazz("ProductHistory");
+        bean.setUrl("showHistory");
         modelMap.put("pageView", productService.getAnalyseResult(bean, pageView, ProductHistory.class));
         modelMap.put("scenicMap",scenicService.getScenicMap());
         modelMap.put("platFormMap", Constant.PLATFORM_MAP);
         modelMap.put("bean",bean);
-        modelMap.put("url","showHistory");
-        modelMap.put("clazz","ProductHistory");
         return "product/list";
     }
 
     @RequestMapping("/showTempResult")
     public String showTempResult(@ModelAttribute("productForm") ProductBean bean,ModelMap modelMap) throws Exception{
         PageView<Product> pageView = new PageView<Product>(12,bean.getPage());
+        bean.setClazz("ProductTempResult");
+        bean.setUrl("showTempResult");
         modelMap.put("pageView", productService.getAnalyseResult(bean, pageView, ProductTempResult.class));
         modelMap.put("scenicMap",scenicService.getScenicMap());
         modelMap.put("platFormMap", Constant.PLATFORM_MAP);
         modelMap.put("bean",bean);
-        modelMap.put("url","showTempResult");
-        modelMap.put("clazz","ProductTempResult");
         return "product/list";
     }
-    /*
-    @RequestMapping("/showTempHistory")
-    public String showTempHistory(@ModelAttribute("productForm") ProductBean bean,ModelMap modelMap) throws Exception{
-        PageView<Product> pageView = new PageView<Product>(12,bean.getPage());
-        modelMap.put("pageView", productService.getAnalyseResult(bean, pageView, ProductTempHistory.class));
-        modelMap.put("scenicMap",scenicService.getScenicMap());
-        modelMap.put("platFormMap", Constant.PLATFORM_MAP);
-        modelMap.put("bean",bean);
-        modelMap.put("url","showTempHistory");
-        modelMap.put("clazz","ProductTempHistory");
-        return "product/list";
-    }
-    */
 
     @RequestMapping("/exportExcel")
-    public void exportResult(@ModelAttribute("productForm")ProductBean bean,HttpServletResponse response){
+    public void exportResult(ProductBean bean,HttpServletResponse response){
         try {
             String[] ids = null;
             if(null!=bean.getIds() && !"".equals(bean.getIds())){
@@ -92,5 +89,15 @@ public class ProductAction {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    @RequestMapping("/sendMail")
+    public void exportResultForMail() throws Exception{
+        SystemParams params = (SystemParams) Constant.SYSTEM_PARAMS.get("email");
+        if(null != params && StringUtils.isNotEmpty(params.getParamValue())){
+            String[] emails = params.getParamValue().split(";");
+            mailService.execute(emails,productService.getProductForEmail());
+        }
+
     }
 }
