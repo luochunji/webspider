@@ -13,15 +13,18 @@
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-1.7.2.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/bootstrap.min.js" ></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/app.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/js/FoshanRen.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/js/My97DatePicker/WdatePicker.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/js/common.js"></script>
     <script>
         $(function () {
-            $('.Wdate').live('focus', function() {
-                WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'});
+            $(".timeinput").datetimepicker({
+                format: 'yyyy-mm-dd',
+                language: 'zh-CN'
             });
         });
         function reSubmit(){
+            var url = $("#url").val();
+            var action = '<%=request.getContextPath()%>/product/'+url;
+            $("#productForm").attr("action",action);
             $("#productForm").submit();
 
         }
@@ -42,29 +45,27 @@
             reSubmit();
         }
         function exportExcel(){
-            <%--window.open('<%=request.getContextPath()%>/product/exportExcel?clazz=${bean.clazz}&ids=${ids})--%>
-            var action = '<%=request.getContextPath()%>/product/exportExcel';
-            $("#productForm").attr("action",action);
-            reSubmit();
+            var ids = '';
+            var arrChk=$("input[name='ids'][checked]");
+            $(arrChk).each(function(){
+                ids +=this.value+',';
+            });
+            $("#ids").val(ids);
+            $("#clazz").val($("input[name='clazz']").val());
+            $("#keyword").val($("#activityKeyw").val());
+            $("#filterStore2").val($("input[name='filterStore']").val());
+            $("#exportExcel").submit();
         }
     </script>
 </head>
 <body>
 <form id="productForm" action="<%=request.getContextPath()%>/product/showResult" method="post">
-    <input type="hidden" name="url" id="requestUrl" value="${url}"/>
+    <input type="hidden" name="url" id="url" value="${bean.url}"/>
     <input type="hidden" name="clazz" value="${bean.clazz}"/>
     <input type="hidden" name="sort" id="sort" />
     <input type="hidden" name="filterStore" id="filterStore" value="${bean.filterStore}"/>
     <input type="hidden" name="platFormId" id="platFormId" value="${bean.platFormId}"/>
     <input type="hidden" name="page" id="page" value="${bean.page}"/>
-    <section class="content-header">
-        <h1>
-            <small></small>
-        </h1>
-        <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i> 网警首页</a></li>
-        </ol>
-    </section>
     <section class="content">
         <!--nav tabs-->
         <ul class="nav nav-tabs">
@@ -85,25 +86,59 @@
             <div class="row">
                 <div class="keybox">
                     <span>平台来源：</span>
+                    <c:if test="${empty bean.platFormId}"><a href="#" class="active">不限</a></c:if>
+                    <c:if test="${!empty bean.platFormId}">
+                        <a title='默认' href="javascript:filterResult('platFormId','');">不限</a>
+                    </c:if>
                     <c:forEach items="${platFormMap}" var="pf">
                         <c:if test="${pf.key == bean.platFormId}"><a href="#" class="active">淘宝网</a></em></strong></c:if>
                         <c:if test="${pf.key != bean.platFormId}">
                             <a title='${pf.value.name}' href="javascript:filterResult('platFormId',${pf.key});">${pf.value.name}</a>
                         </c:if>
                     </c:forEach>
-                    <c:if test="${empty bean.platFormId}"><a href="#" class="active">不限</a></c:if>
-                    <c:if test="${!empty bean.platFormId}">
-                        <a title='默认' href="javascript:filterResult('platFormId','');">不限</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="keybox">
+                    <span>排&nbsp;&nbsp;&nbsp;&nbsp;序：</span>
+                    <c:if test="${empty bean.sort}"><a href="#" class="active" disabled>不限</a></c:if>
+                    <c:if test="${!empty bean.sort}">
+                        <a href="javascript:orderResult('');">不限</a>
+                    </c:if>
+                    <c:if test="${'pricedesc'==bean.sort}"><a href="#" class="active" disabled>价格高到低</a></c:if>
+                    <c:if test="${'pricedesc'!=bean.sort}">
+                        <a href="javascript:orderResult('pricedesc');">价格高到低</a>
+                    </c:if>
+                    <c:if test="${'priceasc'==bean.sort}"><a href="#" class="active" disabled>价格低到高</a></c:if>
+                    <c:if test="${'priceasc'!=bean.sort}">
+                        <a href="javascript:orderResult('priceasc');">价格低到高</a>
                     </c:if>
                 </div>
-                <div class="searchbox">
+            </div>
+            <div class="row">
+                <c:if test="${bean.url != showResult}">
+                    <div class="keybox">
+                        <span>日期区间：</span>
+                        <input type="text" class="form-control timeinput" name="startDate"/>
+                        <span>-</span>
+                        <input type="text" class="form-control timeinput" name="endDate"/>
+                    </div>
+                </c:if>
+                <div class="searchbox form-inline">
                     <div class="input-group">
+                        关键字：
                         <input type="text" name="keyword" value="${bean.keyword}" class="form-control " placeholder="请输入关键字" id="activityKeyw">
+
+                        <span>价格区间：</span>
+                        <input type="text" class="form-control " name="minPrice" value="${bean.minPrice}"/>
+                        <span>-</span>
+                        <input type="text" class="form-control " name="maxPrice" value="${bean.maxPrice}"/>
+
                                         <span class="input-group-btn">
                                             <button class="btn btn-primary" type="button" id="btnSActivity" role="button"
                                                     aria-disabled="false" onclick="javascript:topage(1);"><span class="ui-button-text">搜索</span></button>
                                         </span>
-                        <button class="btn btn-primary" onclick="javascript:exportExcel();">导出</button>
+                        <input type="button" class="btn btn-primary" onclick="javascript:exportExcel();" value="导出">
                     </div>
                 </div>
             </div>
@@ -141,13 +176,14 @@
                 </c:forEach>
                 </tbody>
             </table>
-            <nav>
+            <nav class="clearfix">
                 <ul class="pagination">
                     <c:forEach begin="${pageView.pageindex.startindex}" end="${pageView.pageindex.endindex}" var="wp">
                         <c:if test="${pageView.currentpage==wp}"><li class="active"><a href="#">${wp}</a></li></c:if>
                         <c:if test="${pageView.currentpage!=wp}"><li><a href="javaScript:topage(${wp});">${wp}</a></li></c:if>
                     </c:forEach>
                 </ul>
+                <%@ include file="/WEB-INF/common/fenye.jsp" %>
             </nav>
         </div>
     </section>
@@ -290,5 +326,13 @@
         </tr>
     </table>--%>
 </form>
+<div style="display: none">
+    <form id="exportExcel" action="<%=request.getContextPath()%>/product/exportExcel" method="post" target="_blank">
+        <input type="hidden" name="ids" id="ids">
+        <input type="hidden" name="clazz" id="clazz">
+        <input type="hidden" name="keyword" id="keyword">
+        <input type="hidden" name="filterStore" id="filterStore2">
+    </form>
+</div>
 </body>
 </html>

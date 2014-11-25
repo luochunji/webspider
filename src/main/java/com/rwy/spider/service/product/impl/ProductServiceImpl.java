@@ -6,8 +6,6 @@ import com.rwy.spider.service.product.ProductService;
 import com.rwy.spider.web.bean.ProductBean;
 import com.rwy.spider.web.common.PageView;
 import com.rwy.spider.web.dto.ProductDto;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Service;
 
@@ -120,6 +118,16 @@ public class ProductServiceImpl extends DaoSupport<Product> implements ProductSe
             jpql.append(" o.timeStamp <=?").append(params.size()+1);
             params.add(endDate);
         }
+        if(null!=bean.getMinPrice() && !"".equals(bean.getMinPrice())){
+            jpql.append(" and");
+            jpql.append(" o.price >=?").append(params.size()+1);
+            params.add(Double.valueOf(bean.getMinPrice()));
+        }
+        if(null!=bean.getMaxPrice() && !"".equals(bean.getMaxPrice())){
+            jpql.append(" and");
+            jpql.append(" o.price <=?").append(params.size()+1);
+            params.add(Double.valueOf(bean.getMaxPrice()));
+        }
         pageView.setQueryResult(getCustomerScrollData(pageView.getFirstResult(),
                 pageView.getMaxresult(), jpql.toString(),null, params.toArray(), orderby));
 
@@ -187,6 +195,7 @@ public class ProductServiceImpl extends DaoSupport<Product> implements ProductSe
         jpql.append(" select new com.rwy.spider.web.dto.ProductDto(o.id,s.scenicName, o.type, o.category, o.price, o.low_price, p.name, o.productUrl, o.storeName, o.timeStamp)");
         jpql.append(" from Scenic s,PlatForm p,ProductResult o");
         jpql.append(" where s.id = o.scenicId and p.id = o.platFormId ");
+        jpql.append(" order by o.price desc,o.scenicId asc");
         Query query = em.createQuery(jpql.toString());
         List<ProductDto> dtoList = query.getResultList();
         for(ProductDto dto : dtoList){

@@ -1,5 +1,50 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form action="<%=request.getContextPath()%>/task/temp/modifyTaskTemp" id="modifyTaskTempForm" method="post">
+            <input type="hidden" name="id" id="taskId">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                            class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">修改</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="tables" width="100%">
+                        <tr>
+                            <td align="right">景区名称：</td>
+                            <td colspan="2">
+                                <input type="text" class="form-control" id="scenicName" disabled/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">运行时间:</td>
+                            <td class="inwrap">
+                                <input type="text" id="runtime" name="runtime" class="form-control" readonly disabled/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">关键字:</td>
+                            <td class="inwrap">
+                                <input type="text" id="keyword" name="keyword" class="form-control" />
+                            </td>
+                            <td>
+                                <input type="text" id="price" name="price" class="form-control price" value="00.00"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onClick="javascript:reSubmit(this.form)">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+            <!--end modal-content-->
+        </form>
+
+    </div>
+</div>
+<%--<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>临时任务修改</title>
@@ -66,4 +111,4 @@
     </table>
 </form>
 </body>
-</html>
+</html>--%>

@@ -41,6 +41,9 @@ public class ProductBean extends PageBean implements Serializable {
 
     private String endDate;
 
+    private String url;
+
+
     public String getStoreName() {
         return storeName;
     }
@@ -167,5 +170,13 @@ public class ProductBean extends PageBean implements Serializable {
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

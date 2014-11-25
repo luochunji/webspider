@@ -376,7 +376,7 @@ public class Product implements Serializable{
         this.md5Code = md5Code;
     }
 
-    @Lob
+    @Transient
     public String getHtml() {
         return html;
     }

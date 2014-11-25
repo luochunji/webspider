@@ -1,11 +1,4 @@
 $(document).ready(function () {
-//    $("#setParams").click(function () {
-//        tipsWindown("设置参数", "url:get?<%=request.getContextPath()%>/task/addParamsUI", "350", "160", "true", "", "true", "text");
-//    });
-//    $("#editParams").click(function () {
-//        tipsWindown("编辑参数", "url:get?<%=request.getContextPath()%>/task/modifyParamsUI", "400", "300", "true", "", "true", "text");
-//    });
-
     $("#addSearchTime").click(function () {
         var size = $(".runtimeInput").length;
         if (size == 3) {
@@ -38,4 +31,11 @@ $(document).ready(function () {
         $("#taskTr").append(str);
     });
 });
+function reSubmit(objForm) {
+    objForm.submit();
 
+}
+function topage(objForm,page) {
+    $("#page").val(page);
+    reSubmit(objForm);
+}

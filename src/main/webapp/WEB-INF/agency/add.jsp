@@ -1,5 +1,110 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<script>
+//    $(function () {
+//        $(".addStoreInfo").click(function () {
+//            var str = '';
+//            str+='<tr class="store">';
+//            str+='<td align="right">网店名称:</td>';
+//            str+='<td class="inwrap">';
+//            str+='<input type="text" name="storeName" class="form-control" placeholder="请输入分销商网店名称"/>';
+//            str+='</td>';
+//            str+='<td align="right">网址:</td>';
+//            str+='<td class="inwrap">';
+//            str+='<input type="text" name="storeUrl" class="form-control" placeholder="请输入分销商网店网址"/>';
+//            str+='</td>';
+//            str+='<td onclick="getDel(this)"><a href="#">-</a></td>';
+//            str+='</tr>';
+//            $("#storeInfoTr").append(str);
+//        });
+//    });
+    function addStoreInfoTr(objForm){
+        var str = '';
+        str+='<tr class="store">';
+        str+='<td align="right">网店名称:</td>';
+        str+='<td class="inwrap">';
+        str+='<input type="text" name="storeName" class="form-control" placeholder="请输入分销商网店名称"/>';
+        str+='</td>';
+        str+='<td align="right">网址:</td>';
+        str+='<td class="inwrap">';
+        str+='<input type="text" name="storeUrl" class="form-control" placeholder="请输入分销商网店网址"/>';
+        str+='</td>';
+        str+='<td onclick="getDel(this)"><a href="#">-</a></td>';
+        str+='</tr>';
+        $("#"+objForm.id).find("[name='infoTable']").append(str);
+    }
+    function getStoreInfo(objForm) {
+        var formId = objForm.id;
+        var storeInfo = [];
+        $("#"+formId).find(".store").each(function(){
+            var json = {};
+            json.storeName = $(this).find("[name='storeName']").val();
+            json.storeUrl = $(this).find("[name='storeUrl']").val();
+            storeInfo.push(json);
+            $("#"+formId).find("[name='storeInfo']").val(JSON.stringify(storeInfo));
+        });
+        reSubmit(objForm);
+    }
+</script>
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog FXdialog">
+        <form action="<%=request.getContextPath()%>/agency/addAgency" id="addAgencyForm" method="post">
+            <input name="storeInfo"  type="hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">分销商网店信息录入</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="tables" width="100%" name="infoTable">
+                        <tr>
+                            <td align="right">分销商用户：</td>
+                            <td><input type="text" class="form-control" name="userName"
+                                       placeholder="请输入景区名称" required></td>
+                            <td><font color="red">*</font></td>
+                        </tr>
+                        <tr>
+                            <td align="right">分销商名称:</td>
+                            <td><input type="text" class="form-control" name="name" placeholder="请输入分销平台分销商名称"/></td>
+                            <td><font color="red">*</font></td>
+                        </tr>
+                        <tr>
+                            <td align="right">平台名称:</td>
+                            <td colspan="2">
+                                <select name="platFormId" class="form-control">
+                                    <option value ="" selected>请选择</option>
+                                    <c:forEach items="${pfMap}" var ="pf">
+                                        <option value ="${pf.key}">${pf.value.name}</option>
+                                    </c:forEach>
+                                </select>
+                            </td>
+                            <td><font color="red">*</font></td>
+                        </tr>
+                        <tr class="store">
+                            <td align="right">网店名称:</td>
+                            <td class="inwrap">
+                                <input type="text" name="storeName" class="form-control" placeholder="请输入分销商网店名称"/>
+                            </td>
+                            <td align="right">网址:</td>
+                            <td class="inwrap">
+                                <input type="text" name="storeUrl" class="form-control" placeholder="请输入分销商网店网址"/>
+                            </td>
+                            <td onclick="addStoreInfoTr(this.form)"><a href="#">+</a></td>
+                            <td><font color="red">*</font></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="javascript:getStoreInfo(this.form)">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+            <!--end modal-content-->
+        </form>
+
+    </div>
+</div>
+<%--<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <html>
 <head>
@@ -84,4 +189,4 @@
 </table>
 </form>
 </body>
-</html>
+</html>--%>

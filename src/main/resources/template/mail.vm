@@ -11,13 +11,13 @@
     关键字：$result.key
     <table width="98%" border="1" cellspacing="1" cellpadding="3" align="center">
         <tr bgcolor="6f8ac4">
-            <td style="color: #FFFFFF;">产品名称</td>
             <td style="color: #FFFFFF;">产品链接</td>
             <td style="color: #FFFFFF;">店铺名称</td>
             <td style="color: #FFFFFF;">店铺链接</td>
             <td style="color: #FFFFFF;">产品类型</td>
             <td style="color: #FFFFFF;">产品种类</td>
-            <td style="color: #FFFFFF;"><font color="#FF0000">价格</font></td>
+            <td style="color: #FFFFFF;"><font color="#FF0000">网络售价</font></td>
+            <td style="color: #FFFFFF;"><font color="#FF0000">最低限价</font></td>
             <td style="color: #FFFFFF;">更新时间</td>
             </td>
         </tr>
@@ -25,14 +25,26 @@
         <!--LOOP START-->
         #foreach($product in $result.value)
             <tr bgcolor="f5f5f5">
-                <td>$product.productName</td>
                 <td><a href="$product.productUrl" target="_blank">产品链接</a></td>
                 <td>$product.storeName</td>
                 <td><a href="$product.storeUrl" target="_blank">店铺链接</a></td>
-                <td>$product.category</td>
-                <td>$product.type</td>
-                <td><font color="#FF0000">$product.price</font></td>
-                <td>$product.timeStamp</td>
+                <td>
+                    #if("$!product.category" == "")
+                        -
+                    #else
+                        $product.category
+                    #end
+                </td>
+                <td>
+                    #if("$!product.type" == "")
+                        -
+                    #else
+                        $product.type
+                    #end
+                </td>
+                <td><font color="#FF0000">$product.sellPrice</font></td>
+                <td><font color="#FF0000">$product.lowPrice</font></td>
+                <td>$product.datetime</td>
             </tr>
         #end
         <!--LOOP END-->

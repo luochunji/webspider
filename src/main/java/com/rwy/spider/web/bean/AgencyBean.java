@@ -9,7 +9,9 @@ import java.io.Serializable;
  */
 public class AgencyBean extends PageBean implements Serializable {
 
-//    private String agencyId;
+    private String ids;
+
+    private String agencyId;
 
     private Long platFormId;
 
@@ -99,5 +101,21 @@ public class AgencyBean extends PageBean implements Serializable {
 
     public void setKeyword(String keyword) {
         this.keyword = keyword;
+    }
+
+    public String getAgencyId() {
+        return agencyId;
+    }
+
+    public void setAgencyId(String agencyId) {
+        this.agencyId = agencyId;
+    }
+
+    public String getIds() {
+        return ids;
+    }
+
+    public void setIds(String ids) {
+        this.ids = ids;
     }
 }

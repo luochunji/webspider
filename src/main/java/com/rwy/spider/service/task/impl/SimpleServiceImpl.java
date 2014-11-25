@@ -1,6 +1,7 @@
 package com.rwy.spider.service.task.impl;
 
 import com.rwy.spider.bean.platform.PlatForm;
+import com.rwy.spider.bean.system.SystemParams;
 import com.rwy.spider.bean.task.Task;
 import com.rwy.spider.bean.task.TaskExecution;
 import com.rwy.spider.bean.task.TaskRuntime;
@@ -93,9 +94,11 @@ public class SimpleServiceImpl {
         logger.info("本次耗时："+ time);
 
         try {
-            String emailParams = Constant.SYSTEM_PARAMS.get("email").toString();
-            String[] emails = emailParams.split(";");
-            mailService.execute(emails,map);
+            SystemParams emailParam = (SystemParams) Constant.SYSTEM_PARAMS.get("email");
+            if(null != emailParam){
+                String[] emails = emailParam.getParamValue().split(";");
+                mailService.execute(emails,map);
+            }
         } catch (MessagingException e) {
             e.printStackTrace();
         } catch (IOException e) {

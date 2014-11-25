@@ -26,35 +26,63 @@
             objForm.submit();
 
         }
-        $(function () {
-            $("#addStoreInfo").click(function () {
-                var str = '';
-                str+='<tr class="store">';
-                str+='<td align="right">网店名称:</td>';
-                str+='<td class="inwrap">';
-                str+='<input type="text" name="storeName" class="form-control" placeholder="请输入分销商网店名称"/>';
-                str+='</td>';
-                str+='<td align="right">网址:</td>';
-                str+='<td class="inwrap">';
-                str+='<input type="text" name="storeUrl" class="form-control" placeholder="请输入分销商网店网址"/>';
-                str+='</td>';
-                str+='<td onclick="getDel(this)"><a href="#">-</a></td>';
-                str+='</tr>';
-                $("#storeInfoTr").append(str);
-            });
-        });
-        function getStoreInfo(objForm) {
-            var storeInfo = [];
-            $(".store").each(function(){
-                var json = {};
-                json.storeName = $(this).find("[name='storeName']").val();
-                json.storeUrl = $(this).find("[name='storeUrl']").val();
-                storeInfo.push(json);
-            })
-            $("#storeInfo").val(JSON.stringify(storeInfo));
-            reSubmit(objForm);
+        function modifyCheck() {
+            var size = $("input[name='ids']:checked").length;
+            if (size == 0) {
+                layer.alert("请选择一个修改的景区任务！");
+                return false;
+            } else if (size > 1) {
+                layer.alert("只能选择一个景区任务进行修改！");
+                return false;
+            } else {
+                var id = $("input[name='ids']:checked").val();
+                var url = '<%=request.getContextPath()%>/agency/modifyAgencyUI?id='+id;
+                $.ajax( {
+                    type : "POST",
+                    url : url,
+                    dataType: "json",
+                    success : function(data) {
+                        if('success' == data.result){
+                            buildUI(data);
+                        }
+                        $('#myModal2').modal({
+                            backdrop:true,
+                            keyboard:true,
+                            show:true
+                        });
+                    },
+                    error :function(){
+                        layer.alert("网络连接出错！");
+                    }
+                });
+            }
+            return;
         }
-
+        function delCheck(objForm) {
+            var size = $("input[name='ids']:checked").length;
+            if (size == 0) {
+                layer.alert("请至少选择一个要删除的分销商！");
+                return;
+            } else {
+                $.layer({
+                    shade: [0],
+                    area: ['auto','auto'],
+                    dialog: {
+                        msg: '你确定要删除选中的分销商连同网店数据一起删除吗？',
+                        btns: 2,
+                        type: 9,
+                        btn: ['确定','取消'],
+                        yes: function(){
+                            var action = '<%=request.getContextPath()%>/agency/delAgency';
+                            objForm.action = action;
+                            reSubmit(objForm);
+                        }, no: function(){
+                            return false
+                        }
+                    }
+                });
+            }
+        }
     </script>
 </head>
 <body class="skin-blue tasklist">
@@ -70,10 +98,10 @@
                             <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal1">
                                 新增
                             </button>
-                            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal2">
+                            <button type="button" class="btn btn-default" data-toggle="modal" onclick="javascript:modifyCheck();">
                                 修改
                             </button>
-                            <button type="button" class="btn btn-default">删除</button>
+                            <button type="button" class="btn btn-default" onclick="javascript:delCheck(this.form);">删除</button>
                         </div>
                         <!--end keybox-->
                         <div class="col-xs-6">
@@ -134,7 +162,7 @@
                         </c:forEach>
                         </tbody>
                     </table>
-                    <nav>
+                    <nav class="clearfix">
                         <ul class="pagination">
                             <li><a href="#">&laquo;</a></li>
                             <li class="active"><a href="#">1</a></li>
@@ -144,7 +172,7 @@
                             <li><a href="#">5</a></li>
                             <li><a href="#">&raquo;</a></li>
                         </ul>
-                        <div class="pull-right"><span>共21页</span><span>每页10条记录</span></div>
+                        <%@ include file="/WEB-INF/common/fenye.jsp" %>
                     </nav>
                     <!--end pagination-->
                 </div>
@@ -157,112 +185,12 @@
 </form>
 <!--新增-->
 <!-- Modal -->
-<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog FXdialog">
-        <form action="<%=request.getContextPath()%>/agency/addAgency" id="agencyForm" method="post">
-            <input name="storeInfo" id="storeInfo" type="hidden">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span
-                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" id="myModalLabel">分销商网店信息录入</h4>
-                </div>
-                <div class="modal-body">
-                    <table class="tables" width="100%" id="storeInfoTr">
-                        <tr>
-                            <td align="right">分销商用户：</td>
-                            <td><input type="text" class="form-control" name="userName"
-                                       placeholder="请输入景区名称" required></td>
-                            <td><font color="red">*</font></td>
-                        </tr>
-                        <tr>
-                            <td align="right">分销商名称:</td>
-                            <td><input type="text" class="form-control" name="name" placeholder="请输入分销平台分销商名称"/></td>
-                            <td><font color="red">*</font></td>
-                        </tr>
-                        <tr>
-                            <td align="right">平台名称:</td>
-                            <td colspan="2">
-                                <select name="platFormId" class="form-control">
-                                    <option value ="" selected>请选择</option>
-                                    <c:forEach items="${pfMap}" var ="pf">
-                                        <option value ="${pf.key}">${pf.value.name}</option>
-                                    </c:forEach>
-                                </select>
-                            </td>
-                            <td><font color="red">*</font></td>
-                        </tr>
-                        <tr class="store">
-                            <td align="right">网店名称:</td>
-                            <td class="inwrap">
-                                <input type="text" name="storeName" class="form-control" placeholder="请输入分销商网店名称"/>
-                            </td>
-                            <td align="right">网址:</td>
-                            <td class="inwrap">
-                                <input type="text" name="storeUrl" class="form-control" placeholder="请输入分销商网店网址"/>
-                            </td>
-                            <td><a href="#" id="addStoreInfo">+</a></td>
-                            <td><font color="red">*</font></td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="javascript:getStoreInfo(this.form)">保存</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                </div>
-            </div>
-            <!--end modal-content-->
-        </form>
-
-    </div>
-</div>
+<%@ include file="/WEB-INF/agency/add.jsp" %>
 <!--end add-->
 <!--修改-->
 <!-- Modal -->
-<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog FXdialog">
-        <form>
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span
-                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" id="myModalLabel">分销商网店信息录入</h4>
-                </div>
-                <div class="modal-body">
-                    <table class="tables" width="100%">
-                        <tr>
-                            <td align="right">分销商用户：</td>
-                            <td><input type="text" class="form-control"
-                                       placeholder="请输入景区名称" required></td>
-                            <td><font>*</font></td>
-                        </tr>
-                        <tr>
-                            <td align="right">分销商名称:</td>
-                            <td><input type="text" class="form-control" placeholder="请输入分销平台分销商名称"/></td>
-                            <td><font>*</font></td>
-                        </tr>
-                        <tr>
-                            <td align="right">平台名称:</td>
-                            <td colspan="2"><input type="text" class="form-control" placeholder="请输入分销商网店平台名称"/></td>
-                        </tr>
-                        <tr>
-                            <td align="right">网店信息:</td>
-                            <td class="inwrap"><input type="text" class="form-control" placeholder="请输入分销商网店名称"/><input
-                                    type="text" class="form-control" placeholder="请输入分销商网店网址"/></td>
-                            <td><font>*</font></td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="javascript:sureSubmit(this.form);">保存</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                </div>
-            </div>
-            <!--end modal-content-->
-        </form>
+<%@ include file="/WEB-INF/agency/modify.jsp" %>
 
-    </div>
-</div>
 <%--<form action="<%=request.getContextPath()%>/agency/list" id="agencyForm" method="post">
     <input type="hidden" name="page" id="page" value="${bean.page}"/>
     <table width="98%" border="0" cellspacing="1" cellpadding="3" align="center">
