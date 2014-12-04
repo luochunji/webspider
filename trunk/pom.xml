@@ -302,7 +302,7 @@
             </activation>
             <!--自动化构建、检查和测试 -->
             <build>
-                <finalName>spider</finalName>
+                <finalName>webspider</finalName>
                 <plugins>
                     <plugin>
                         <artifactId>maven-compiler-plugin</artifactId>
