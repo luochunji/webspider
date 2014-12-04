@@ -3,6 +3,7 @@ package com.rwy.spider.service.task;
 import com.rwy.spider.bean.task.TaskRuntime;
 import com.rwy.spider.service.base.DAO;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,8 +23,10 @@ public interface TaskRuntimeService extends DAO<TaskRuntime> {
      */
     public Map<String,TaskRuntime> getNormalTaskRuntimeMap();
 
+    public List<TaskRuntime> getSysTaskRunTime();
+
     /**
-     * 更新调度任务
+     * 更新临时调度任务
      */
     public void updateRuntimeAndTriggerJob();
 }

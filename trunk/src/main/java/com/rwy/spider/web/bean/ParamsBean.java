@@ -1,24 +1,30 @@
 package com.rwy.spider.web.bean;
 
+import com.rwy.spider.web.common.PageBean;
+
+import java.io.Serializable;
+
 /**
  * Created by Luocj on 2014/11/14.
  */
-public class ParamsBean {
+public class ParamsBean extends PageBean implements Serializable {
 
-    private String id;
+    private String paramId;
 
     private String paramKey;
 
     private String paramValue;
 
+    private String description;
+
     private String runtime;
 
-    public String getId() {
-        return id;
+    public String getParamId() {
+        return paramId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setParamId(String paramId) {
+        this.paramId = paramId;
     }
 
     public String getParamKey() {
@@ -43,5 +49,13 @@ public class ParamsBean {
 
     public void setRuntime(String runtime) {
         this.runtime = runtime;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

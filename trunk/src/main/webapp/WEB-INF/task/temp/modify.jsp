@@ -20,7 +20,7 @@
                         <tr>
                             <td align="right">运行时间:</td>
                             <td class="inwrap">
-                                <input type="text" id="runtime" name="runtime" class="form-control" readonly disabled/>
+                                <input type="text" id="runtime" name="runtime" class="form-control" readonly/>
                             </td>
                         </tr>
                         <tr>

@@ -31,11 +31,17 @@ $(document).ready(function () {
         $("#taskTr").append(str);
     });
 });
-function reSubmit(objForm) {
-    objForm.submit();
-
-}
 function topage(objForm,page) {
     $("#page").val(page);
     reSubmit(objForm);
+}
+function exportToExcel(){
+    var ids = '';
+    var arrChk=$("input[name='ids'][checked]");
+    $(arrChk).each(function(){
+        ids +=this.value+',';
+    });
+    $("#ids").val(ids);
+    $("#keyword").val($("#activityKeyw").val());
+    $("#exportExcel").submit();
 }

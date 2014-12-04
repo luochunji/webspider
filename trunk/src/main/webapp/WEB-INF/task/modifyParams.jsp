@@ -9,9 +9,9 @@
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/common.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/My97DatePicker/WdatePicker.js"></script>
     <script type="text/javascript">
-        function sureSubmit(objForm) {
-            objForm.submit();
-        }
+//        function reSubmit(objForm) {
+//            objForm.submit();
+//        }
         $(function () {
             $("#getAtr").click(function () {
                 var size = $(".runtimeInput").length;
@@ -89,7 +89,7 @@
             <td colspan="5">
                 <div align="center">
                     <input type="button" name="Add" value=" 保 存 " class="frm_btn"
-                           onClick="javascript:sureSubmit(this.form)">
+                           onClick="javascript:reSubmit(this.form)">
                     &nbsp;&nbsp;<input type="button" name="Button" value=" 关 闭 " class="frm_btn"
                                        onclick="javascript:closeWindown();">
                 </div>

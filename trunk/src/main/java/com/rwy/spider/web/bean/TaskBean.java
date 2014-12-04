@@ -19,6 +19,8 @@ public class TaskBean extends PageBean implements Serializable{
 
     private String scenicId;
 
+    private String scenicName;
+
     private String keyword;
 
     private double price;
@@ -30,6 +32,8 @@ public class TaskBean extends PageBean implements Serializable{
     private Map params = Constant.SYSTEM_PARAMS;
 
     private String emailTitle;
+
+    private String taskType;
 
     public String getId() {
         return id;
@@ -96,7 +100,7 @@ public class TaskBean extends PageBean implements Serializable{
     }
 
     public String getEmailTitle() {
-        Object paramObj = params.get("email");
+        Object paramObj = params.get("EMAIL");
         emailTitle = "";
         if(null!=paramObj){
             SystemParams sp = (SystemParams) paramObj;
@@ -110,5 +114,21 @@ public class TaskBean extends PageBean implements Serializable{
 
     public void setEmailTitle(String emailTitle) {
         this.emailTitle = emailTitle;
+    }
+
+    public String getTaskType() {
+        return taskType;
+    }
+
+    public void setTaskType(String taskType) {
+        this.taskType = taskType;
+    }
+
+    public String getScenicName() {
+        return scenicName;
+    }
+
+    public void setScenicName(String scenicName) {
+        this.scenicName = scenicName;
     }
 }

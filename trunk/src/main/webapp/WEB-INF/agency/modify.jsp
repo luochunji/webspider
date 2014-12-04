@@ -19,43 +19,26 @@
             }
 
         });
-        if(agency.agencyStores.length == 0){
-            var str ='';
-            str +='<tr class="store">';
-            str +='<td align="right">网店名称:</td>';
-            str +='<td class="inwrap">';
-            str +='<input type="text" name="storeName" class="form-control"/>';
-            str +='</td>';
-            str +='<td align="right">网址:</td>';
-            str +='<td class="inwrap">';
-            str +='<input type="text" name="storeUrl" class="form-control" />';
-            str +='</td>';
-            str +='<td onclick="javascript:addStoreInfoTr(modifyAgencyForm);"><a href="#">+</a></td>';
-            str +='</tr>';
+        $.each(agency.agencyStores, function (n, value) {
+            var str = '';
+            str += '<tr class="store">';
+            str += '<td align="right">网店名称:</td>';
+            str += '<td class="inwrap">';
+            str += '<input type="text" name="storeName" value=' + value.storeName + ' class="form-control"/>';
+            str += '</td>';
+            str += '<td align="right">网址:</td>';
+            str += '<td class="inwrap">';
+            str += '<input type="text" name="storeUrl" value=' + value.storeUrl + ' class="form-control" />';
+            str += '</td>';
+            if (0 == n) {
+                str += '<td onclick="javascript:addStoreInfoTr(\'modifyAgencyForm\');"><a href="#">+</a></td>';
+            } else {
+                str += '<td onclick="javascript:getDel(this);"><a href="#">-</a></td>';
+            }
+            str += '</tr>';
             storeInfoObj.append(str);
-        }else{
-            $.each(agency.agencyStores,function(n,value) {
-                var str ='';
-                str +='<tr class="store">';
-                str +='<td align="right">网店名称:</td>';
-                str +='<td class="inwrap">';
-                str +='<input type="text" name="storeName" value='+value.storeName+' class="form-control"/>';
-                str +='</td>';
-                str +='<td align="right">网址:</td>';
-                str +='<td class="inwrap">';
-                str +='<input type="text" name="storeUrl" value='+value.storeUrl+' class="form-control" />';
-                str +='</td>';
-                if(0==n){
-                    str +='<td onclick="javascript:addStoreInfoTr(modifyAgencyForm);"><a href="#">+</a></td>';
-                }else{
-                    str +='<td onclick="javascript:getDel(this);"><a href="#">-</a></td>';
-                }
-                str +='</tr>';
-                storeInfoObj.append(str);
 
-            });
-        }
-
+        });
     }
 </script>
 <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -93,7 +76,7 @@
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="javascript:getStoreInfo(this.form);">保存</button>
+                    <button type="button" class="btn btn-primary" onclick="javascript:verifyForm(this.form);">保存</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 </div>
             </div>

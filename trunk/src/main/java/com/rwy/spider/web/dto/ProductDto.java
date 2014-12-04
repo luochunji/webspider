@@ -1,6 +1,7 @@
 package com.rwy.spider.web.dto;
 
 import com.rwy.spider.annotation.ExcelExportRuleAnnotation;
+import com.rwy.spider.web.bean.TaskType;
 
 import java.util.Date;
 
@@ -10,6 +11,9 @@ import java.util.Date;
 public class ProductDto {
 
     private String id;
+
+    @ExcelExportRuleAnnotation(label = "任务属性")
+    private String taskType;
 
     @ExcelExportRuleAnnotation(label = "景区名称")
     private String scenicName;
@@ -43,6 +47,20 @@ public class ProductDto {
 
     public ProductDto(String id, String scenicName, String type, String category, double sellPrice, double lowPrice, String platForm, String productUrl, String storeName, Date datetime) {
         this.id = id;
+        this.scenicName = scenicName;
+        this.type = type;
+        this.category = category;
+        this.sellPrice = sellPrice;
+        this.lowPrice = lowPrice;
+        this.platForm = platForm;
+        this.productUrl = productUrl;
+        this.storeName = storeName;
+        this.datetime = datetime;
+    }
+
+    public ProductDto(String id, String taskType, String scenicName, String type, String category, double sellPrice, double lowPrice, String platForm, String productUrl, String storeName, Date datetime) {
+        this.id = id;
+        this.taskType = TaskType.valueOf(taskType).getName();
         this.scenicName = scenicName;
         this.type = type;
         this.category = category;
@@ -132,5 +150,13 @@ public class ProductDto {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getTaskType() {
+        return taskType;
+    }
+
+    public void setTaskType(String taskType) {
+        this.taskType = taskType;
     }
 }

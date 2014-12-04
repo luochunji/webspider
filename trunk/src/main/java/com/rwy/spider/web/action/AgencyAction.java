@@ -7,8 +7,10 @@ import com.rwy.spider.constant.Constant;
 import com.rwy.spider.service.agency.AgencyService;
 import com.rwy.spider.service.agency.AgencyStoreService;
 import com.rwy.spider.service.platform.PlatFormService;
+import com.rwy.spider.utils.ExportExcelUtils;
 import com.rwy.spider.web.bean.AgencyBean;
 import com.rwy.spider.web.common.PageView;
+import com.rwy.spider.web.dto.AgencyDto;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.*;
@@ -133,5 +136,15 @@ public class AgencyAction {
             agencyService.delete(ids);
         }
         return "redirect:/agency/list";
+    }
+
+    @RequestMapping("/exportExcel")
+    public void exportResult(AgencyBean bean, HttpServletResponse response) {
+        String[] ids = null;
+        if (null != bean.getIds() && !"".equals(bean.getIds())) {
+            ids = bean.getIds().split(",");
+        }
+        List<AgencyDto> dtoList = agencyService.getExportResultList(bean,ids);
+        ExportExcelUtils.exportExcelToBrowser(response, AgencyDto.class, dtoList, "分销商列表.xls",true);
     }
 }

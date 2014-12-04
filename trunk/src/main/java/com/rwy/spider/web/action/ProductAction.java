@@ -9,8 +9,10 @@ import com.rwy.spider.constant.Constant;
 import com.rwy.spider.service.mail.impl.MailServiceImpl;
 import com.rwy.spider.service.product.ProductService;
 import com.rwy.spider.service.scenic.ScenicService;
+import com.rwy.spider.service.task.TaskService;
 import com.rwy.spider.utils.ExportExcelUtils;
 import com.rwy.spider.web.bean.ProductBean;
+import com.rwy.spider.web.bean.TaskBean;
 import com.rwy.spider.web.common.PageView;
 import com.rwy.spider.web.dto.ProductDto;
 import org.apache.commons.lang3.StringUtils;
@@ -38,6 +40,8 @@ public class ProductAction {
     private ScenicService scenicService;
     @Resource
     private MailServiceImpl mailService;
+    @Resource
+    private TaskService taskService;
 
 
     @RequestMapping("/showResult")
@@ -49,6 +53,7 @@ public class ProductAction {
         modelMap.put("scenicMap",scenicService.getScenicMap());
         modelMap.put("platFormMap", Constant.PLATFORM_MAP);
         modelMap.put("bean",bean);
+        modelMap.put("taskCount",taskService.getTaskList(new TaskBean(),new PageView(12,bean.getPage())).getTotalrecord());
         return "product/list";
     }
 
@@ -85,7 +90,13 @@ public class ProductAction {
             }
             Class clazz = Class.forName("com.rwy.spider.bean.product."+bean.getClazz());
             List<ProductDto> dtoList = productService.getExportResultList(bean,ids,clazz);
-            ExportExcelUtils.exportExcelToBrowser(response,ProductDto.class,dtoList,"测试文件.xls");
+            String fileName= "常规任务结果导出.xls";
+            if("ProductTempResult".equals(bean.getClazz())){
+                fileName= "临时任务结果导出.xls";
+            }else if("ProductHistory".equals(bean.getClazz())){
+                fileName= "历史结果导出.xls";
+            }
+            ExportExcelUtils.exportExcelToBrowser(response,ProductDto.class,dtoList,fileName);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -93,7 +104,7 @@ public class ProductAction {
 
     @RequestMapping("/sendMail")
     public void exportResultForMail() throws Exception{
-        SystemParams params = (SystemParams) Constant.SYSTEM_PARAMS.get("email");
+        SystemParams params = (SystemParams) Constant.SYSTEM_PARAMS.get("EMAIL");
         if(null != params && StringUtils.isNotEmpty(params.getParamValue())){
             String[] emails = params.getParamValue().split(";");
             mailService.execute(emails,productService.getProductForEmail());

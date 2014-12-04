@@ -6,7 +6,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>景区任务列表</title>
+    <title>系统参数列表</title>
     <link href="<%=request.getContextPath()%>/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
     <link href="<%=request.getContextPath()%>/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
     <link href="<%=request.getContextPath()%>/css/ionicons.min.css" rel="stylesheet" type="text/css"/>
@@ -23,13 +23,11 @@
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/app.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/task.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/plugins/layer/layer.min.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/js/FoshanRen.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/js/selectAndText.js"></script>
 </head>
 <script>
     $(document).ready(function () {
-        $("input[name^='runtime']").live('focus',function() {
-            $("input[name^='runtime']").datetimepicker({
+        $("#paramValue").live('focus',function() {
+            $("input[datatype='TIME']").datetimepicker({
                 format: 'hh:ii:ss',
                 language: 'zh-CN',
                 weekStart: 1,
@@ -41,43 +39,42 @@
                 maxView: 1,
                 minuteStep:1,
                 forceParse: 0
-            })
-        });
-        if(${0==pageView.totalrecord}){
-            $('#myModal1').modal({
-                backdrop:true,
-                keyboard:true,
-                show:true
             });
-        }
+            $("input[datatype!='TIME']").datetimepicker('remove');
+        })
     });
     function modifyCheck() {
         var size = $("input[name='ids']:checked").length;
         if (size == 0) {
-            layer.alert("请选择一个修改的景区任务！");
+            layer.alert("请选择一个修改参数！");
             return false;
         } else if (size > 1) {
-            layer.alert("只能选择一个景区任务进行修改！");
+            layer.alert("只能选择一个参数进行修改！");
             return false;
         } else {
             var id = $("input[name='ids']:checked").val();
-            var url = '<%=request.getContextPath()%>/task/modifyTaskUI?id='+id;
+            var url = '<%=request.getContextPath()%>/system/modifyParamsUI?id='+id;
             $.ajax( {
                 type : "POST",
                 url : url,
                 dataType: "json",
                 success : function(data) {
                     if('success' == data.result){
-                        $("#scenicName").val(data.scenic.scenicName);
-                        $("#taskId").val(data.task.id);
-                        $("#keyword").val(data.task.keyword);
-                        $("#price").val(data.task.price);
+                        $("#paramId").val(data.param.id);
+                        $("#description").val(data.param.description);
+                        $("#paramValue").val(data.param.paramValue);
+                        $("#paramValue").attr("datatype",data.param.dataType);
+                        if('TIME' == data.param.dataType){
+                            $("#paramValue").attr("readonly","readonly");
+                        }else{
+                            $("#paramValue").removeAttr("readonly");
+                        }
+                        $('#myModal2').modal({
+                            backdrop:true,
+                            keyboard:true,
+                            show:true
+                        });
                     }
-                    $('#myModal2').modal({
-                        backdrop:true,
-                        keyboard:true,
-                        show:true
-                    });
                 },
                 error :function(){
                     layer.alert("网络连接出错！");
@@ -111,51 +108,15 @@
             });
         }
     }
-    function getCondition(objForm){
-        var conditions = [];
-        $(".condition").each(function(){
-            var json = {};
-            json.keyword = $(this).find("[name='keyword']").val();
-            json.price = $(this).find("[name='price']").val();
-            conditions.push(json);
-        })
-        $("#conditions").val(JSON.stringify(conditions));
-        reSubmit(objForm);
-    }
 </script>
-<body class="skin-blue tasklist">
-
-<form action="<%=request.getContextPath()%>/task/list" id="taskForm" method="post">
+<body class="skin-blue systemparamlist">
+<form action="<%=request.getContextPath()%>/system/list" id="paramsForm" method="post">
     <input type="hidden" name="page" id="page" value="${bean.page}"/>
-    <input type="hidden" name="id" />
-
+    <input type="hidden" name="id" id="id"/>
     <div class="wrapper row-offcanvas row-offcanvas-left">
         <!-- Main content -->
         <section class="content">
             <div class="box box-primary">
-                <div class="box-header setbox">
-                    <div class="col-xs-3">
-                        <span>搜索时间：</span>
-                        <c:if test="${!empty runtimeMap}">
-                            <c:forEach items="${runtimeMap}" var="rt">
-                                <span>${rt.value.runtime}</span>
-                            </c:forEach>
-                        </c:if>
-                    </div>
-                    <div class="col-xs-9">
-                        <span>接收邮箱：</span>
-                        <c:if test="${!empty bean.params['EMAIL']}">
-                            <c:if test="${fn:length(bean.params['EMAIL'].paramValue)>25}">
-                                <span title="${bean.emailTitle}">${fn:substring(bean.params['EMAIL'].paramValue, 0,25)}...</span>
-                            </c:if>
-                            <c:if test="${fn:length(bean.params['EMAIL'].paramValue)<=25}">
-                                <span title="${bean.emailTitle}">${bean.params['EMAIL'].paramValue}</span>
-                            </c:if>
-                        </c:if>
-                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">设置
-                        </button>
-                    </div>
-                </div>
                 <!--end box-header-->
                 <div class="box-body">
                     <div class="row">
@@ -169,33 +130,34 @@
                             </button>
                             <button type="button" class="btn btn-default" onclick="javascript:delCheck(this.form);">删除</button>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12 searchbox">
-                            <span>关键字:</span>
-                            <input type="text" class="form-control keyinput" placeholder="请输入关键字" id="activityKeyw" name="keyword" value="${bean.keyword}">
-                            <button class="btn btn-primary" onclick="javascript:topage(this.form,1);">搜索</button>
-                            <input type="button" class="btn btn-default" value="导出" onclick="javascript:exportToExcel();"/>
+                        <!--end keybox-->
+                        <div class="col-xs-6">
+                            <div class="searchbox">
+                                <div class="input-group">
+                                    <input type="text" class="form-control " placeholder="请输入关键字" id="activityKeyw" name="keyword" value="${bean.keyword}">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-primary" type="button" role="button" onclick="javascript:topage(this.form,1);"
+                                                aria-disabled="false"><span class="ui-button-text">搜索</span></button>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
+                        <!--end searchbox-->
                     </div>
                     <table class="table table-bordered">
                         <thead>
                         <tr>
                             <th><input type="checkbox" id="chk_all"/>全选</th>
-                            <th>序号</th>
-                            <th>景区名称</th>
-                            <th>关键字</th>
-                            <th>价格</th>
+                            <th>功能描述</th>
+                            <th>参数值</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <c:forEach items="${pageView.records}" var="dto" varStatus="index">
+                        <c:forEach items="${pageView.records}" var="params" varStatus="index">
                             <tr>
-                                <td><input type="checkbox" name="ids" value="${dto.id}"></td>
-                                <td><c:out value="${index.count}"/></td>
-                                <td><c:out value="${dto.scenicName}"/></td>
-                                <td><c:out value="${dto.keyword}"/></td>
-                                <td><c:out value="${dto.lowprice}"/></td>
+                                <td><input type="checkbox" name="ids" value="${params.id}"></td>
+                                <td><c:out value="${params.description}"/></td>
+                                <td><c:out value="${params.paramValue}"/></td>
                             </tr>
                         </c:forEach>
                         </tbody>
@@ -217,22 +179,14 @@
         <!-- /.content -->
     </div>
 </form>
-    <!-- ./wrapper -->
-    <!--搜索设置-->
-    <!-- Modal -->
-    <%@ include file="/WEB-INF/task/addParams.jsp" %>
-    <!--新增任务-->
-    <!-- Modal -->
-    <%@ include file="/WEB-INF/task/add.jsp" %>
-    <!--end add-->
-    <!--修改-->
-    <!-- Modal -->
-    <%@ include file="/WEB-INF/task/modify.jsp" %>
+<!--新增参数-->
+<!-- Modal -->
+<%--<%@ include file="/WEB-INF/system/add.jsp" %>--%>
+<!--end add-->
+<!--修改参数-->
+<!-- Modal -->
+<%@ include file="/WEB-INF/system/modify.jsp" %>
 </body>
 
-<form id="exportExcel" action="<%=request.getContextPath()%>/task/exportExcel" method="post" target="_blank">
-    <input type="hidden" name="ids" id="ids">
-    <input type="hidden" name="keyword" id="keyword">
-</form>
 </body>
 </html>

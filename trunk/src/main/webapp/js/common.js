@@ -1,10 +1,6 @@
 /**
  * Created by Luocj on 2014/11/5.
  */
-function changeStatus(str) {
-    $(".timeDiv").css("display", "none");
-    $("div[id^=" + str+"]").css("display", "block");
-}
 $(function () {
     $("#chk_all").click(function(){
         if('checked' == $(this).attr("checked")){
@@ -20,3 +16,10 @@ function getDel(k) {
     $(k).parent().remove();
 }
 
+function Formfield(name, label){
+    this.name=name;
+    this.label=label;
+}
+function reSubmit(objForm) {
+    objForm.submit();
+}

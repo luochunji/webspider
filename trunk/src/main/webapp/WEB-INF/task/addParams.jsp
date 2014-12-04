@@ -1,9 +1,39 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<script>
+    function verifyParamForm(objForm){
+        var flag = true;
+        var formId = objForm.id;
+        $("#"+formId).find("input[name='runtime']").each(function(){
+            if($.trim($(this).val())==''){
+                layer.alert("运行时间不能为空！");
+                flag = false;
+                return false;
+            }
+        });
+        var emails = $("#email").val();
+        if($.trim(emails) == ''){
+            layer.alert("邮箱不能为空");
+            return false;
+        }else{
+            var email = emails.split(";");
+            $.each(email,function(n,value){
+                if(!verifyEmailAddress(value)){
+                    layer.alert("邮箱格式不正确，请重新输入！");
+                    flag = false;
+                    return false;
+                }
+            })
+        }
+        if(flag){
+            reSubmit(objForm);
+        }
+    }
+</script>
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
     <div class="modal-dialog">
         <form action="<%=request.getContextPath()%>/task/modifyParams" id="paramForm" method="post">
             <input type="hidden" name="paramKey" value="email">
-            <input type="hidden" name="id"  value="${paramsMap['email'].id}">
+            <input type="hidden" name="paramId"  value="${paramsMap['EMAIL'].id}">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
@@ -37,7 +67,7 @@
                     <table class="tables" width="100%">
                         <tr>
                             <td align="right">接收邮箱:</td>
-                            <td><input type="text" class="form-control" name="paramValue" value="${paramsMap['email'].paramValue}" /></td>
+                            <td><input type="text" class="form-control" id="email" name="paramValue" value="${paramsMap['EMAIL'].paramValue}" /></td>
                         </tr>
                         <tr>
                             <td colspan="3" align="center" class="tips">
@@ -47,7 +77,7 @@
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onClick="javascript:reSubmit(this.form)">保存</button>
+                    <button type="button" class="btn btn-primary" onClick="javascript:verifyParamForm(this.form)">保存</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal" onclick="javascript:location.reload();">关闭</button>
                 </div>
             </div>

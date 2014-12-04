@@ -25,7 +25,7 @@ public class ProductHistory implements Serializable{
     private String id;
 
     /**
-     * 景区名称
+     * 景区编号
      */
     private String scenicId;
 

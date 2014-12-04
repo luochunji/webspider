@@ -1,4 +1,37 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<script>
+    function verifyForm(objForm){
+        var flag = true;
+        var formId = objForm.id;
+        if($.trim($("#"+formId).find("select[name='scenicId']").val()) == ''){
+            layer.alert("请选择景区");
+            return false;
+        }
+        $("#"+formId).find(".condition").each(function(){
+            var keyword = $(this).find("[name='keyword']").val();
+            var price = $(this).find("[name='price']").val();
+            if(''==keyword || ''==price){
+                layer.alert("关键字或价格不能为空！");
+                flag = false;
+                return false;
+            }else{
+                if(!verifyNumberCheck(price)){
+                    flag = false;
+                    layer.alert("价格只能输入数字并且大于0！");
+                }
+            }
+
+        });
+        var runtime = $("#"+formId).find("input[name='runtime']").val();
+        if(''==runtime){
+            layer.alert("运行时间不能为空！");
+            return false;
+        }
+        if(flag){
+            getCondition(objForm);
+        }
+    }
+</script>
 <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <form action="<%=request.getContextPath()%>/task/temp/addTaskTemp" id="addTaskTempForm" method="post">
@@ -22,14 +55,14 @@
                                     <>
                                 </select>
                             </td>
-                            <td>
-                                <a href="<%=request.getContextPath()%>/scenic/addScenicUI">添加景区</a>
-                            </td>
+                            <%--<td>--%>
+                                <%--<a href="<%=request.getContextPath()%>/scenic/addScenicUI">添加景区</a>--%>
+                            <%--</td>--%>
                         </tr>
                         <tr>
                             <td align="right">运行时间:</td>
                             <td class="inwrap">
-                                <input type="text" name="runtime" class="form-control" readonly/>
+                                <input type="text" name="runtime" class="form-control" id="" readonly/>
                             </td>
                         </tr>
                         <tr class="condition">
@@ -42,7 +75,7 @@
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="javascript:getCondition(this.form)">保存</button>
+                    <button type="button" class="btn btn-primary" onclick="javascript:verifyForm(this.form)">保存</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 </div>
             </div>

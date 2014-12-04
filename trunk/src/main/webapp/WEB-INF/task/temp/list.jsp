@@ -21,6 +21,8 @@
             src="<%=request.getContextPath()%>/js/plugins/daterangepicker/bootstrap-datetimepicker.zh-CN.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/app.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/task.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/js/plugins/layer/layer.min.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/js/FoshanRen.js"></script>
 </head>
 <script>
     $(document).ready(function() {
@@ -57,6 +59,11 @@
             layer.alert("只能选择一个临时任务进行修改！");
             return false;
         }else{
+            var readonly = $("input[name='ids']:checked").attr("readonly");
+            if(readonly){
+                layer.alert("已运行任务无法修改！");
+                return false;
+            }
             var id = $("input[name='ids']:checked").val();
             var url = '<%=request.getContextPath()%>/task/temp/modifyTaskTempUI?id='+id;
             $.ajax( {
@@ -88,8 +95,19 @@
         var size = $("input[name='ids']:checked").length;
         if(size == 0){
             layer.alert("请选择一个任务！");
-            return;
+            return false;
         }else{
+            var readonly =false;
+            $("input[name='ids']:checked").each(function(){
+                readonly = $(this).attr("readonly");
+                if(readonly){
+                    return false;
+                }
+            });
+            if(readonly){
+                layer.alert("删除的任务中包含已运行任务，请重新选择！");
+                return;
+            }
             $.layer({
                 shade: [0],
                 area: ['auto','auto'],
@@ -103,7 +121,7 @@
                         objForm.action = action;
                         reSubmit(objForm);
                     }, no: function(){
-                        return false
+                        return false;
                     }
                 }
             });
@@ -143,20 +161,14 @@
                             </button>
                             <button type="button" class="btn btn-default" onclick="javascript:delCheck(this.form);">删除</button>
                         </div>
-                        <!--end keybox-->
-                        <div class="col-xs-6">
-                            <div class="searchbox">
-                                <div class="input-group">
-                                    <input type="text" class="form-control " placeholder="请输入关键字" id="activityKeyw" name="keyword" value="${bean.keyword}">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-primary" type="button" role="button" onclick="javascript:topage(this.form,1);"
-                                                aria-disabled="false"><span class="ui-button-text">搜索</span></button>
-                                    </span>
-                                    <button class="btn btn-primary" onclick="javascript:exportExcel();">导出</button>
-                                </div>
-                            </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 searchbox">
+                            <span>关键字:</span>
+                            <input type="text" class="form-control keyinput" placeholder="请输入关键字" id="activityKeyw" name="keyword" value="${bean.keyword}">
+                            <button class="btn btn-primary" onclick="javascript:topage(this.form,1);">搜索</button>
+                            <input type="button" class="btn btn-default" value="导出" onclick="javascript:exportToExcel();"/>
                         </div>
-                        <!--end searchbox-->
                     </div>
                     <table class="table table-bordered">
                         <thead>
@@ -172,17 +184,14 @@
                         </thead>
                         <tbody>
                         <c:forEach items="${pageView.records}" var="dto" varStatus="index">
-                            <tr bgcolor="f5f5f5" id="<c:out value='${dto.task.id}'/>">
-                                <td><input type="checkbox" name="ids" value="${dto.task.id}" <c:if test="${dto.task.status == 'RUNNED'}">disabled="true" </c:if> ></td>
+                            <tr bgcolor="f5f5f5" id="<c:out value='${dto.id}'/>">
+                                <td><input type="checkbox" name="ids" value="${dto.id}" <c:if test="${dto.status == '已运行'}">readonly="true" </c:if> ></td>
                                 <td><c:out value="${index.count}"/></td>
-                                <td><c:out value="${dto.scenic.scenicName}"/></td>
-                                <td><c:out value="${dto.task.keyword}"/></td>
-                                <td><c:out value="${dto.task.price}"/></td>
-                                <td><c:out value="${dto.taskRuntime.runtime}"/></td>
-                                <td>
-                                    <c:if test="${dto.task.status == 'WATTING'}">等待中</c:if>
-                                    <c:if test="${dto.task.status == 'RUNNED'}">已运行</c:if>
-                                </td>
+                                <td><c:out value="${dto.scenicName}"/></td>
+                                <td><c:out value="${dto.keyword}"/></td>
+                                <td><c:out value="${dto.lowprice}"/></td>
+                                <td><c:out value="${dto.runtime}"/></td>
+                                <td><c:out value="${dto.status}"/></td>
                             </tr>
                         </c:forEach>
                         </tbody>
@@ -278,5 +287,10 @@
         </tr>
     </table>
 </form>--%>
+<form id="exportExcel" action="<%=request.getContextPath()%>/task/exportExcel" method="post" target="_blank">
+    <input type="hidden" name="ids" id="ids">
+    <input type="hidden" name="taskType" id="taskType" value="TEMP">
+    <input type="hidden" name="keyword" id="keyword">
+</form>
 </body>
 </html>

@@ -5,10 +5,14 @@ import com.rwy.spider.service.agency.AgencyService;
 import com.rwy.spider.service.base.DaoSupport;
 import com.rwy.spider.web.bean.AgencyBean;
 import com.rwy.spider.web.common.PageView;
+import com.rwy.spider.web.dto.AgencyDto;
+import com.rwy.spider.web.dto.TaskTempDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.Query;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -68,6 +72,31 @@ public class AgencyServiceImpl extends DaoSupport<Agency> implements AgencyServi
         }
 
         return pageView;
+    }
+
+    @Override
+    public List<AgencyDto> getExportResultList(AgencyBean bean,String[] ids) {
+        StringBuffer jpql = new StringBuffer("");
+        List<Object> params = new ArrayList<Object>();
+        jpql.append(" select new com.rwy.spider.web.dto.AgencyDto(o.userName,o.name,s.storeName,s.storeUrl)");
+        jpql.append(" from Agency o,AgencyStore s");
+        jpql.append(" where o.id = s.agency.id ");
+        if(null!=ids && 0!=ids.length){
+            jpql.append(" and o.id in (?").append(params.size()+1).append(")");
+            params.add(Arrays.asList(ids));
+        }
+        if(null!=bean.getKeyword() && !"".equals(bean.getKeyword())){
+            jpql.append(" and ");
+            jpql.append(" concat(s.storeName,o.userName,o.name) like ?").append(params.size()+1);
+            params.add("%"+ bean.getKeyword() +"%");
+        }
+        jpql.append(" order by o.userName ");
+        Query query = em.createQuery(jpql.toString());
+        for(int i=0;i<params.size();i++){
+            query.setParameter(i+1, params.get(i));
+        }
+        List<AgencyDto> dtoList = query.getResultList();
+        return dtoList;
     }
 
     private LinkedHashMap<String, String> buildOrder(String sort) {

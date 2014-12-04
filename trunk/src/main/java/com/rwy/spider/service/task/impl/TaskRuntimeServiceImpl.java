@@ -50,9 +50,19 @@ public class TaskRuntimeServiceImpl extends DaoSupport<TaskRuntime> implements T
     }
 
     @Override
+    public List<TaskRuntime> getSysTaskRunTime() {
+        StringBuffer jpql = new StringBuffer("");
+        jpql.append(" o.type ='SYS'");
+
+        return getScrollData(-1,-1,jpql.toString(),null,null).getResultlist();
+    }
+
+    @Override
     public void updateRuntimeAndTriggerJob() {
         StringBuffer jpql = new StringBuffer("");
-        jpql.append(" select o.id from TaskRuntime o where o.id not in (select t.runtimeId from Task t)");
+        jpql.append(" select o.id from TaskRuntime o ");
+        jpql.append(" where o.id not in (select t.runtimeId from Task t where t.runtimeId is not null)");
+        jpql.append(" and o.type='TEMP'");
         Query query = em.createQuery(jpql.toString());
         List<String> idList = query.getResultList();
         for(String id : idList){
