@@ -64,9 +64,15 @@ public class SimpleServiceImpl {
             logger.info("*** 临时任务开始执行，时间："+ DateFormatUtils.format(new Date(),"yyyy-MM-dd HH:mm:ss")+" ***");
             String runtimeId = tr.getId();
             taskList = taskService.getScrollData(-1,-1," o.runtimeId =?1",new Object[]{runtimeId}).getResultlist();
+        }else if("SYS".equals(type)){
+            logger.info("*** 系统任务开始执行，时间："+ DateFormatUtils.format(new Date(),"yyyy-MM-dd HH:mm:ss")+" ***");
+            //转移临时数据
+            productService.process("{call proc_temp_to_history(?1)}",Constant.TEMP_DATA_CLEAR);
+            //清理历史数据
+            productService.process("{call proc_clear_history(?1)}",Constant.HISTORY_DATA_CLEAR);
+            logger.info("*** 系统任务执行完毕，时间："+ DateFormatUtils.format(new Date(),"yyyy-MM-dd HH:mm:ss")+" ***");
         }
         if(taskList.size()==0){
-
             return;
         }
         for(Object key : Constant.PLATFORM_MAP.keySet()){
@@ -94,7 +100,7 @@ public class SimpleServiceImpl {
         logger.info("本次耗时："+ time);
 
         try {
-            SystemParams emailParam = (SystemParams) Constant.SYSTEM_PARAMS.get("email");
+            SystemParams emailParam = Constant.SYSTEM_PARAMS.get("EMAIL");
             if(null != emailParam){
                 String[] emails = emailParam.getParamValue().split(";");
                 mailService.execute(emails,map);

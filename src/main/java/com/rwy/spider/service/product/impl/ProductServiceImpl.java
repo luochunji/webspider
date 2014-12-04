@@ -84,7 +84,7 @@ public class ProductServiceImpl extends DaoSupport<Product> implements ProductSe
         LinkedHashMap<String, String> orderby = buildOrder(bean.getSort());
         StringBuffer jpql = new StringBuffer("");
         List<Object> params = new ArrayList<Object>();
-        jpql.append(" select new com.rwy.spider.web.dto.ProductDto(o.id,s.scenicName, o.type, o.category, o.price, o.low_price, p.name, o.productUrl, o.storeName, o.timeStamp)");
+        jpql.append(" select new com.rwy.spider.web.dto.ProductDto(o.id,o.taskType,s.scenicName, o.type, o.category, o.price, o.low_price, p.name, o.productUrl, o.storeName, o.timeStamp)");
         jpql.append(" from Scenic s,PlatForm p,"+DaoSupport.getEntityName(clazz)+" o");
         jpql.append(" where s.id = o.scenicId and p.id = o.platFormId");
         if(bean.getFilterStore()!= null && !"".equals(bean.getFilterStore())){
@@ -143,8 +143,8 @@ public class ProductServiceImpl extends DaoSupport<Product> implements ProductSe
             orderby.put("price", "asc");
         }else{
             orderby.put("timeStamp", "desc");
-            orderby.put("storeName", "desc");
             orderby.put("scenicId", "asc");
+            orderby.put("storeName", "desc");
         }
         return orderby;
     }
@@ -167,7 +167,7 @@ public class ProductServiceImpl extends DaoSupport<Product> implements ProductSe
     public List<ProductDto> getExportResultList(ProductBean bean,String[] ids,Class clazz) {
         StringBuilder jpql = new StringBuilder("");
         List<Object> params = new ArrayList<Object>();
-        jpql.append(" select new com.rwy.spider.web.dto.ProductDto(o.id,s.scenicName, o.type, o.category, o.price, o.low_price, p.name, o.productUrl, o.storeName, o.timeStamp)");
+        jpql.append(" select new com.rwy.spider.web.dto.ProductDto(o.id,o.taskType,s.scenicName, o.type, o.category, o.price, o.low_price, p.name, o.productUrl, o.storeName, o.timeStamp)");
         jpql.append(" from Scenic s,PlatForm p,"+DaoSupport.getEntityName(clazz)+" o");
         jpql.append(" where s.id = o.scenicId and p.id = o.platFormId ");
         if(null!=ids && 0!=ids.length){

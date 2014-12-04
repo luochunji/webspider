@@ -13,18 +13,20 @@
     <script>
         $(document).ready(function() {
             var main_width = document.body.clientWidth - 220;
-            var main_height = $(document).height() - 50;
+//            var main_height = document.body.clientHeight - 50 - 45;
             $("#content").attr("width",main_width);
-            $("#content").attr("height",main_height);
+            $("#content").attr("height",900);
             $("#content").attr("src",'<%=request.getContextPath()%>/product/showResult');
 
             $('.sidebar-menu li').click(function(){
                 $(this).addClass('active').siblings('li').removeClass('active');
             })
         });
-        function turnPage(url){
-//            alert($(k).parent());
-            $("#content").attr("src",'<%=request.getContextPath()%>'+url);
+        function turnPage(url,name){
+            url = '<%=request.getContextPath()%>'+url;
+            $("#content").attr("src",url);
+            $("#navBar").attr("href",url);
+            $("#navBar").find("span").text(name);
         }
     </script>
 </head>
@@ -34,7 +36,7 @@
             <div class="pull-left image">
             </div>
             <div class="pull-left info">
-                <p>欢迎您, 陈玲</p>
+                <p>欢迎您,XXXX</p>
             </div>
         </div>
         <nav class="navbar navbar-static-top" role="navigation">
@@ -51,32 +53,32 @@
             <section class="sidebar">
                 <ul class="sidebar-menu">
                     <li>
-                        <a href="javascript:turnPage('/product/showResult');">
+                        <a href="javascript:turnPage('/product/showResult','网警首页');">
                             <span>网警首页</span>
                         </a>
                     </li>
                     <li>
-                        <a href="javascript:turnPage('/task/list');">
+                        <a href="javascript:turnPage('/task/list','常规任务列表');">
                             <span>常规任务列表</span>
                         </a>
                     </li>
                     <li>
-                        <a href="javascript:turnPage('/task/temp/list');">
+                        <a href="javascript:turnPage('/task/temp/list','临时任务列表');">
                             <span>临时任务列表</span>
                         </a>
                     </li>
                     <li>
-                        <a href="javascript:turnPage('/product/showTempResult');">
+                        <a href="javascript:turnPage('/product/showTempResult','临时查询结果');">
                             <span>临时查询结果</span>
                         </a>
                     </li>
                     <li>
-                        <a href="javascript:turnPage('/agency/list');">
+                        <a href="javascript:turnPage('/agency/list','分销网店列表');">
                             <span>分销网店列表</span>
                         </a>
                     </li>
                     <li>
-                        <a href="javascript:turnPage('/product/showHistory');">
+                        <a href="javascript:turnPage('/product/showHistory','历史搜索数据');">
                             <span>历史搜索数据</span>
                         </a>
                     </li>
@@ -85,58 +87,15 @@
             <!-- /.sidebar -->
         </aside>
         <aside class="right-side">
-            <iframe id="content" src="">
+            <section class="content-header">
+                <ol class="breadcrumb">
+                    <li><a href="#" id="navBar"><i class="fa fa-dashboard"></i><span>网警首页</span></a></li>
+                </ol>
+            </section>
+            <iframe id="content" src="" >
 
             </iframe>
         </aside>
         </div>
-
-<%--
-	<header id="header">
-		<hgroup>
-			<h1 class="site_title"><a href="index.html">Website Admin</a></h1>
-			<h2 class="section_title">Dashboard</h2><div class="btn_view_site"><a href="http://www.cnblogs.com/strick/">View Site</a></div>
-		</hgroup>
-	</header> <!-- end of header bar -->
-	<section id="secondary_bar">
-		<div class="user">
-			<p>Pwstrick (<a href="#">3 Messages</a>)</p>
-			<!-- <a class="logout_user" href="#" title="Logout">Logout</a> -->
-		</div>
-		<div class="breadcrumbs_container">
-			<article class="breadcrumbs"><a href="index.html">后台首页</a><div class="breadcrumb_divider"></div><a class="current">首页信息</a></article>
-		</div>
-	</section><!-- end of secondary bar -->
-	<aside id="sidebar" class="column">
-		<form class="quick_search">
-			<input type="text" value="Quick Search" onfocus="if(!this._haschanged){this.value=''};this._haschanged=true;">
-		</form>
-		<hr/>
-		<h3>我的面板</h3>
-		<ul class="toggle">
-			<li><font class="ficomoon icon-profile"></font><a href="#">修改个人信息</a></li>
-			<li><font class="ficomoon icon-pwd"></font><a href="#">修改密码</a></li>
-			<li><font class="ficomoon icon-logout"></font><a href="#">退出</a></li>
-		</ul>
-		<h3>模块</h3>
-		<ul class="toggle">
-			<li><font class="ficomoon icon-bbs"></font><a href="javascript:turnPage('/product/showResult')">网警首页</a></li>
-			<li><font class="ficomoon icon-circle"></font><a href="javascript:turnPage('/task/list')">景区任务列表</a></li>
-			<li><font class="ficomoon icon-question"></font><a href="javascript:turnPage('/task/temp/list')">临时任务列表</a></li>
-            <li><font class="ficomoon icon-question"></font><a href="javascript:turnPage('/product/showTempResult')">临时任务结果</a></li>
-			<li><font class="ficomoon icon-private-msg"></font><a href="javascript:turnPage('/agency/list')">分销商列表</a></li>
-			<li><font class="ficomoon icon-comment"></font><a href="javascript:turnPage('/product/showHistory')">历史数据</a></li>
-		</ul>
-		<footer>
-			<hr />
-			<p><strong>Copyright &copy; 2014 Pwstrick</strong></p>
-		</footer>
-	</aside><!-- end of sidebar -->
-	<section id="main" class="column main_shadow">
-		<iframe id="content" src="">
-
-		</iframe>
-	</section>
-	<script src="<%=request.getContextPath()%>/js/scripts/libs/require/require.js" type="text/javascript" data-main="scripts/app/index/main"></script>--%>
 </body>
 </html>

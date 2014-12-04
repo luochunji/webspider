@@ -21,11 +21,12 @@
     <script src="<%=request.getContextPath()%>/js/plugins/daterangepicker/bootstrap-datetimepicker.zh-CN.js"
             type="text/javascript" charset="UTF-8"></script>
     <script src="<%=request.getContextPath()%>/js/app.js" type="text/javascript"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/js/plugins/layer/layer.min.js"></script>
     <script type="text/javascript" language="JavaScript">
-        function reSubmit(objForm) {
-            objForm.submit();
-
-        }
+//        function reSubmit(objForm) {
+//            objForm.submit();
+//
+//        }
         function modifyCheck() {
             var size = $("input[name='ids']:checked").length;
             if (size == 0) {
@@ -83,6 +84,23 @@
                 });
             }
         }
+        function topage(objForm,page) {
+            if(typeof(objForm)=="string"){
+                objForm = $("#"+objForm);
+            }
+            $("#page").val(page);
+            reSubmit(objForm);
+        }
+        function exportExcel(){
+            var ids = '';
+            var arrChk=$("input[name='ids'][checked]");
+            $(arrChk).each(function(){
+                ids +=this.value+',';
+            });
+            $("#ids").val(ids);
+            $("#keyword").val($("#activityKeyw").val());
+            $("#exportExcel").submit();
+        }
     </script>
 </head>
 <body class="skin-blue tasklist">
@@ -103,23 +121,17 @@
                             </button>
                             <button type="button" class="btn btn-default" onclick="javascript:delCheck(this.form);">删除</button>
                         </div>
-                        <!--end keybox-->
-                        <div class="col-xs-6">
-                            <div class="searchbox">
-                                <div class="input-group">
-                                    <input type="text" name="keyword" class="form-control " placeholder="请输入关键字"
-                                           id="activityKeyw">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-primary" type="button" role="button"
-                                                aria-disabled="false" onclick="javascript:reSubmit(this.form);"><span
-                                                class="ui-button-text">搜索</span></button>
-                                    </span>
-                                    <button class="btn btn-primary">导出</button>
-                                </div>
-                            </div>
-                        </div>
-                        <!--end searchbox-->
                     </div>
+                    <!--end keybox-->
+                    <div class="row">
+                        <div class="col-xs-12 searchbox">
+                            <span>关键字:</span>
+                            <input type="text" name="keyword" class="form-control keyinput" placeholder="请输入关键字"  id="activityKeyw" value="${bean.keyword}">
+                            <button class="btn btn-primary" onclick="javascript:topage(this.form,1);">搜索</button>
+                            <input type="button" class="btn btn-default" value="导出" onclick="javascript:exportExcel();"/>
+                        </div>
+                    </div>
+                    <!--end searchbox-->
                     <table class="table table-bordered">
                         <thead>
                         <tr>
@@ -152,7 +164,7 @@
                                         <c:forEach items="${agency.agencyStores}" var="store">
                                             <tr>
                                                 <td>
-                                                    <a href="<c:out value="${store.storeUrl}"/>">店铺链接</a>
+                                                    <a href="<c:out value="${store.storeUrl}"/>" target="_blank">店铺链接</a>
                                                 </td>
                                             </tr>
                                         </c:forEach>
@@ -164,13 +176,10 @@
                     </table>
                     <nav class="clearfix">
                         <ul class="pagination">
-                            <li><a href="#">&laquo;</a></li>
-                            <li class="active"><a href="#">1</a></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#">4</a></li>
-                            <li><a href="#">5</a></li>
-                            <li><a href="#">&raquo;</a></li>
+                            <c:forEach begin="${pageView.pageindex.startindex}" end="${pageView.pageindex.endindex}" var="wp">
+                                <c:if test="${pageView.currentpage==wp}"><li class="active"><a href="#">${wp}</a></li></c:if>
+                                <c:if test="${pageView.currentpage!=wp}"><li><a href="#" onclick="javaScript:topage('agencyForm',${wp});">${wp}</a></li></c:if>
+                            </c:forEach>
                         </ul>
                         <%@ include file="/WEB-INF/common/fenye.jsp" %>
                     </nav>
@@ -294,6 +303,11 @@
         </tr>
     </table>
 </form>--%>
-
+<div style="display: none">
+    <form id="exportExcel" action="<%=request.getContextPath()%>/agency/exportExcel" method="post" target="_blank">
+        <input type="hidden" name="ids" id="ids">
+        <input type="hidden" name="keyword" id="keyword">
+    </form>
+</div>
 </body>
 </html>

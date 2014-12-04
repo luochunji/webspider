@@ -138,7 +138,6 @@ public class GenericsUtils {
      * 通过反射,获得Field泛型参数的实际类型. 如: public Map<String, Buyer> names;
      *
      * @param field 字段
-     * @param index 泛型参数所在索引,从0开始.
      * @return 泛型参数的实际类型, 如果没有实现ParameterizedType接口，即不支持泛型，所以直接返回<code>Object.class</code>
      */
     @SuppressWarnings("unchecked")

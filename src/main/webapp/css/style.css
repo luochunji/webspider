@@ -1877,11 +1877,15 @@ body > .header .logo .icon {
 .keybox a.active{color:#3c8dbc;pointer-events: none;}
 .keybox .form-control{
     display:inline-block;
-    width:auto;
+    width:110px;
 }
-.searchbox{padding:0px 15px 15px;display: table;float:right;}
+
+.searchbox{padding:0px 15px 15px;}
 .searchbox input{margin-left:10px;}
-.form-inline .form-control{width:auto;margin-left:0;}
+.searchbox .form-control{width:110px;margin-left:0;display: inline-block;}
+.keybox .keyinput,.searchbox .keyinput{
+    width:160px;
+}
 .pagination{margin:0;}
 /*taskList */
 .setbox {padding:10px 0;background-color:#F3F3F3;}
@@ -1915,12 +1919,12 @@ input[type="checkbox"]{width:18px;height:18px;}
     color: #FFF;
 }
 /*select and text*/
-.selectAndText{
+.keywordbox{
     width:300px;
     height:35px;
     position:relative;
 }
-.textInput{
+.keys{
     width:300px;
     height:35px;
     line-height:30px;
@@ -1940,9 +1944,9 @@ input[type="checkbox"]{width:18px;height:18px;}
     font-size:12px;
     color:#fff;
     cursor:pointer;
-    display:none;
+    display:block;
 }
-.selectPlan{
+.selectPlan,.selectbox{
     position:absolute;
     top:34px;
     left:0px;
@@ -1955,12 +1959,12 @@ input[type="checkbox"]{width:18px;height:18px;}
     display:none;
     background:#FFF;
 }
-.selectOption{
+.selectOption,.options{
     cursor:pointer;
     padding:0 10px;
     margin:0;
 }
-.selectOption:hover{
+.selectOption:hover,.options:hover{
     background:#f4f4f4;
 }
 .selectAndText input{float:left;}

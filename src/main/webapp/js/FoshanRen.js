@@ -255,3 +255,14 @@ for (i=0; i<checkstrpass.length; i++) {
 function ck_chinese(value_) {
   return escape(value_).indexOf("%u")!=-1 
 }
+
+/***************************************************************************
+ *
+ * 数字输入控制，允许小数点；且大于0
+ *
+ *
+ ****************************************************************************/
+function verifyNumberCheck(value){
+    var reg=/^\d+(\.\d+)*$/;
+    return reg.test(value) && value>0;
+}

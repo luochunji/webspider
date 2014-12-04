@@ -15,7 +15,7 @@ public class TaskRuntime implements Serializable {
     private String id;
 
     /**
-     * 对应的任务类型（NORMAL-常规任务;TEMP-临时任务）
+     * 对应的任务类型（NORMAL-常规任务;TEMP-临时任务;SYS-系统任务）
      */
     private String type;
 

@@ -28,9 +28,19 @@ public class SystemParams implements Serializable {
     private String paramValue;
 
     /**
+     * 参数功能描述
+     */
+    private String description;
+
+    /**
      * 是否启用 1-启用 0-关闭
      */
     private boolean status;
+
+    /**
+     * 参数值数据类型
+     */
+    private String dataType;
 
     @Id
     @GenericGenerator(name="idGenerator", strategy="uuid")
@@ -67,5 +77,23 @@ public class SystemParams implements Serializable {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    @Column(length = 255)
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Column(length = 16)
+    public String getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
     }
 }

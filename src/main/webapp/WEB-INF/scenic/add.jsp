@@ -7,11 +7,11 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-1.7.2.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/common.js"></script>
-    <script type="text/javascript">
-        function sureSubmit(objForm){
-            objForm.submit();
-        }
-    </script>
+    <%--<script type="text/javascript">--%>
+        <%--function reSubmit(objForm){--%>
+            <%--objForm.submit();--%>
+        <%--}--%>
+    <%--</script>--%>
 </head>
 <body>
 <form action="<%=request.getContextPath()%>/scenic/addScenic" id="scenicForm" method="post">
@@ -30,7 +30,7 @@
     </tr>
 <tr bgcolor="f5f5f5">
     <td colspan="5"> <div align="center">
-        <input type="button" name="Add" value=" 保 存 " class="frm_btn" onClick="javascript:sureSubmit(this.form)">
+        <input type="button" name="Add" value=" 保 存 " class="frm_btn" onClick="javascript:reSubmit(this.form)">
         &nbsp;&nbsp;<input type="button" name="Button" value=" 返 回 " class="frm_btn" onclick="javascript:history.back()">
     </div></td>
 </tr>

@@ -316,8 +316,6 @@ public class TaobaoSpiderV2ServiceImpl implements BasePageProcessor {
             productMap.clear();
         }
         productMap = null;
-
-
     }
 
 }

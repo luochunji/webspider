@@ -67,4 +67,21 @@ public class CronExpConversionUtils {
         }
         return cronEx;
     }
+
+    /**
+     * 获取调度时间表达式
+     * @param runtime
+     * @return
+     */
+    public static String getCronExpression(String runtime) {
+        String cronExpression = "";
+        String[] time = runtime.split(":");
+
+        String[] commonNeeds = {time[2], time[1], time[0]};
+        String everyWhat = "dayly";
+        // 得到时间规则
+        cronExpression = CronExpConversionUtils.convertDateToCronExp(everyWhat, commonNeeds,
+                null, null, null);
+        return cronExpression;
+    }
 }

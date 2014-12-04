@@ -1,23 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <script>
-//    $(function () {
-//        $(".addStoreInfo").click(function () {
-//            var str = '';
-//            str+='<tr class="store">';
-//            str+='<td align="right">网店名称:</td>';
-//            str+='<td class="inwrap">';
-//            str+='<input type="text" name="storeName" class="form-control" placeholder="请输入分销商网店名称"/>';
-//            str+='</td>';
-//            str+='<td align="right">网址:</td>';
-//            str+='<td class="inwrap">';
-//            str+='<input type="text" name="storeUrl" class="form-control" placeholder="请输入分销商网店网址"/>';
-//            str+='</td>';
-//            str+='<td onclick="getDel(this)"><a href="#">-</a></td>';
-//            str+='</tr>';
-//            $("#storeInfoTr").append(str);
-//        });
-//    });
-    function addStoreInfoTr(objForm){
+    function addStoreInfoTr(formId){
         var str = '';
         str+='<tr class="store">';
         str+='<td align="right">网店名称:</td>';
@@ -30,7 +13,7 @@
         str+='</td>';
         str+='<td onclick="getDel(this)"><a href="#">-</a></td>';
         str+='</tr>';
-        $("#"+objForm.id).find("[name='infoTable']").append(str);
+        $("#"+formId).find("[name='infoTable']").append(str);
     }
     function getStoreInfo(objForm) {
         var formId = objForm.id;
@@ -43,6 +26,47 @@
             $("#"+formId).find("[name='storeInfo']").val(JSON.stringify(storeInfo));
         });
         reSubmit(objForm);
+    }
+    function verifyForm(objForm){
+        var regs=/^[-\D_a-zA-Z\u4e00-\u9fa5]+$/;
+        var urlReg=/[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/;
+        var list  = new Array(new Formfield("userName", "分销商用户名"),new Formfield("name", "分销商全称"),
+                new Formfield("platFormId", "平台名称"));
+        for(var i=0;i<list.length;i++){
+            var objfield = eval("objForm."+ list[i].name);
+            if($.trim(objfield.value)==""){
+                layer.alert(list[i].label+ "不能为空");
+                if(objfield.type!="hidden" && objfield.focus()) objfield.focus();
+                return false;
+            }
+        }
+        var flag = true;
+        var formId = objForm.id;
+        $("#"+formId).find(".store").each(function(){
+            var storeName = $(this).find("[name='storeName']").val();
+            var storeUrl = $(this).find("[name='storeUrl']").val();
+            if(''==storeName || ''==storeUrl){
+                layer.alert("网店名称、商户网址不能为空");
+                flag = false;
+                return false;
+            }else{
+                if(!urlReg.test(storeUrl)){
+                    flag = false;
+                    layer.alert("不符合网店网址规则，请重新输入!");
+                }
+            }
+
+        });
+        if(flag){
+            getStoreInfo(objForm);
+        }
+    }
+    function validateUsername(username){
+        var regUseName=/^[\w-\s]+$/;
+        if(!regs.test(username)){
+            layer.alert("不符合规则,请重新输入");
+            return;
+        }
     }
 </script>
 <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -59,17 +83,17 @@
                     <table class="tables" width="100%" name="infoTable">
                         <tr>
                             <td align="right">分销商用户：</td>
-                            <td><input type="text" class="form-control" name="userName"
-                                       placeholder="请输入景区名称" required></td>
+                            <td><input type="text" class="form-control" onblur="javascript:validateUsername(this.value)" name="userName"
+                                       placeholder="请输入分销商用户名" ></td>
                             <td><font color="red">*</font></td>
                         </tr>
                         <tr>
-                            <td align="right">分销商名称:</td>
-                            <td><input type="text" class="form-control" name="name" placeholder="请输入分销平台分销商名称"/></td>
+                            <td align="right">分销商名称：</td>
+                            <td><input type="text" class="form-control" name="name" placeholder="请输入分销商全称"/></td>
                             <td><font color="red">*</font></td>
                         </tr>
                         <tr>
-                            <td align="right">平台名称:</td>
+                            <td align="right">平台名称：</td>
                             <td colspan="2">
                                 <select name="platFormId" class="form-control">
                                     <option value ="" selected>请选择</option>
@@ -81,21 +105,21 @@
                             <td><font color="red">*</font></td>
                         </tr>
                         <tr class="store">
-                            <td align="right">网店名称:</td>
+                            <td align="right">网店名称：</td>
                             <td class="inwrap">
                                 <input type="text" name="storeName" class="form-control" placeholder="请输入分销商网店名称"/>
                             </td>
-                            <td align="right">网址:</td>
+                            <td align="right">网址：</td>
                             <td class="inwrap">
                                 <input type="text" name="storeUrl" class="form-control" placeholder="请输入分销商网店网址"/>
                             </td>
-                            <td onclick="addStoreInfoTr(this.form)"><a href="#">+</a></td>
+                            <td onclick="addStoreInfoTr('addAgencyForm')"><a href="#">+</a></td>
                             <td><font color="red">*</font></td>
                         </tr>
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="javascript:getStoreInfo(this.form)">保存</button>
+                    <button type="button" class="btn btn-primary" onclick="javascript:verifyForm(this.form);">保存</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 </div>
             </div>
