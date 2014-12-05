@@ -77,6 +77,9 @@ public class SimpleServiceImpl {
         }
         for(Object key : Constant.PLATFORM_MAP.keySet()){
             PlatForm pf = (PlatForm) Constant.PLATFORM_MAP.get(key);
+            if("0".equals(pf.getStatus())){
+                continue;
+            }
             Object service = SpringUtils.getInstance().getBean(pf.getService());
             if(service instanceof BasePageProcessor){
                 BasePageProcessor bpp = (BasePageProcessor)service;
@@ -88,6 +91,17 @@ public class SimpleServiceImpl {
         if("NORMAL".equals(type)){
             productService.process("{call proc_analysis_result(?1)}",new Timestamp(trigger.getPreviousFireTime().getTime()));
             map = productService.getProductForEmail();
+            try {
+                SystemParams emailParam = Constant.SYSTEM_PARAMS.get("EMAIL");
+                if(null != emailParam){
+                    String[] emails = emailParam.getParamValue().split(";");
+                    mailService.execute(emails,map);
+                }
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }else if("TEMP".equals(type)){
             for(Task task : taskList){
                 task.setStatus("RUNNED");
@@ -99,17 +113,6 @@ public class SimpleServiceImpl {
         Long time = endDate - startDate;
         logger.info("本次耗时："+ time);
 
-        try {
-            SystemParams emailParam = Constant.SYSTEM_PARAMS.get("EMAIL");
-            if(null != emailParam){
-                String[] emails = emailParam.getParamValue().split(";");
-                mailService.execute(emails,map);
-            }
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
     }
 }

@@ -192,7 +192,7 @@ public class ProductServiceImpl extends DaoSupport<Product> implements ProductSe
         Map<String,List<ProductDto>> map = new HashMap();
         StringBuilder jpql = new StringBuilder("");
         List<Object> params = new ArrayList<Object>();
-        jpql.append(" select new com.rwy.spider.web.dto.ProductDto(o.id,s.scenicName, o.type, o.category, o.price, o.low_price, p.name, o.productUrl, o.storeName, o.timeStamp)");
+        jpql.append(" select new com.rwy.spider.web.dto.ProductDto(o.id,s.scenicName, o.type, o.category, o.price, o.low_price, p.name, o.productUrl, o.storeName,o.storeUrl, o.timeStamp)");
         jpql.append(" from Scenic s,PlatForm p,ProductResult o");
         jpql.append(" where s.id = o.scenicId and p.id = o.platFormId ");
         jpql.append(" order by o.price desc,o.scenicId asc");

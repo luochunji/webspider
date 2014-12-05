@@ -84,13 +84,6 @@
                 });
             }
         }
-        function topage(objForm,page) {
-            if(typeof(objForm)=="string"){
-                objForm = $("#"+objForm);
-            }
-            $("#page").val(page);
-            reSubmit(objForm);
-        }
         function exportExcel(){
             var ids = '';
             var arrChk=$("input[name='ids'][checked]");

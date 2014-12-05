@@ -23,3 +23,11 @@ function Formfield(name, label){
 function reSubmit(objForm) {
     objForm.submit();
 }
+
+function topage(objForm,page) {
+    if(typeof(objForm)=="string"){
+        objForm = $("#"+objForm);
+    }
+    $("#page").val(page);
+    reSubmit(objForm);
+}

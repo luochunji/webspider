@@ -118,7 +118,7 @@
                         <a title='默认' href="javascript:filterResult('platFormId','');">不限</a>
                     </c:if>
                     <c:forEach items="${platFormMap}" var="pf">
-                        <c:if test="${pf.key == bean.platFormId}"><a href="#" class="active">淘宝网</a></em></strong></c:if>
+                        <c:if test="${pf.key == bean.platFormId}"><a href="#" class="active">${pf.value.name}</a></em></strong></c:if>
                         <c:if test="${pf.key != bean.platFormId}">
                             <a title='${pf.value.name}' href="javascript:filterResult('platFormId',${pf.key});">${pf.value.name}</a>
                         </c:if>

@@ -31,10 +31,6 @@ $(document).ready(function () {
         $("#taskTr").append(str);
     });
 });
-function topage(objForm,page) {
-    $("#page").val(page);
-    reSubmit(objForm);
-}
 function exportToExcel(){
     var ids = '';
     var arrChk=$("input[name='ids'][checked]");

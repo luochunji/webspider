@@ -2,7 +2,7 @@
 <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <form action="<%=request.getContextPath()%>/system/modifyParams" id="modifyParamsForm" method="post">
-            <input type="hidden" name="id" id="paramId">
+            <input type="hidden" name="paramId" id="paramId">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span

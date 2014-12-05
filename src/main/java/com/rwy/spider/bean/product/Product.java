@@ -156,6 +156,15 @@ public class Product implements Serializable{
         this.storeUrl = storeUrl;
     }
 
+    public Product(String itemId, String productName, String productUrl, String storeName, double price) {
+        this.itemId = itemId;
+        this.productName = productName;
+        this.productUrl = productUrl;
+        this.storeName = storeName;
+        this.price = price;
+    }
+
+
 
     public Product(Product product,ProductDetail detail) {
         this.itemId = product.getItemId();

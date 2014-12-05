@@ -39,10 +39,27 @@ public class ProductDto {
     @ExcelExportRuleAnnotation(label = "店铺名称")
     private String storeName;
 
+    private String storeUrl;
+
     @ExcelExportRuleAnnotation(label = "更新时间")
     private Date datetime;
 
     public ProductDto() {
+
+    }
+
+    public ProductDto(String id, String scenicName, String type, String category, double sellPrice, double lowPrice, String platForm, String productUrl, String storeName, String storeUrl,Date datetime) {
+        this.id = id;
+        this.scenicName = scenicName;
+        this.type = type;
+        this.category = category;
+        this.sellPrice = sellPrice;
+        this.lowPrice = lowPrice;
+        this.platForm = platForm;
+        this.productUrl = productUrl;
+        this.storeName = storeName;
+        this.storeUrl = storeUrl;
+        this.datetime = datetime;
     }
 
     public ProductDto(String id, String scenicName, String type, String category, double sellPrice, double lowPrice, String platForm, String productUrl, String storeName, Date datetime) {
@@ -57,6 +74,8 @@ public class ProductDto {
         this.storeName = storeName;
         this.datetime = datetime;
     }
+
+
 
     public ProductDto(String id, String taskType, String scenicName, String type, String category, double sellPrice, double lowPrice, String platForm, String productUrl, String storeName, Date datetime) {
         this.id = id;
