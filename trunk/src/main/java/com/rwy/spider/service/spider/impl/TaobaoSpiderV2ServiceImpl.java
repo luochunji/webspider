@@ -25,6 +25,7 @@ import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.selector.Html;
 
 import javax.annotation.Resource;
+import java.net.URLEncoder;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -90,7 +91,7 @@ public class TaobaoSpiderV2ServiceImpl implements BasePageProcessor {
                         int nextPage = currentPage*pageSize;
                         String keyword = json.getJSONObject("mainInfo").getJSONObject("srpGlobal").getString("q");
                         String date = DateFormatUtils.format(new Date(), "yyyyMMdd");
-                        String nextUrl = MessageFormat.format(LIST_URL, nextPage, keyword, date);
+                        String nextUrl = MessageFormat.format(LIST_URL, nextPage, URLEncoder.encode(keyword), date);
                         page.addTargetRequest(nextUrl);
                     }
                 }
@@ -287,7 +288,7 @@ public class TaobaoSpiderV2ServiceImpl implements BasePageProcessor {
         productMap = new HashMap<String, Product>();
         for(Object obj : objs){
             Task task = (Task) obj;
-            String newUrl = MessageFormat.format(LIST_URL, "0", task.getKeyword(), DateFormatUtils.format(new Date(),"yyyyMMdd"));
+            String newUrl = MessageFormat.format(LIST_URL, "0", URLEncoder.encode(task.getKeyword()), DateFormatUtils.format(new Date(),"yyyyMMdd"));
             Spider.create(this).addUrl(newUrl).thread(20).run();
             logger.info("*** 关键字【"+task.getKeyword()+"】抓取完毕，共抓取："+productMap.size()+"条数据，正在保存中 ***");
             String id = task.getId();

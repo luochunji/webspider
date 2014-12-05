@@ -200,7 +200,7 @@
                         <ul class="pagination">
                             <c:forEach begin="${pageView.pageindex.startindex}" end="${pageView.pageindex.endindex}" var="wp">
                                 <c:if test="${pageView.currentpage==wp}"><li class="active"><a href="#" >${wp}</a></li></c:if>
-                                <c:if test="${pageView.currentpage!=wp}"><li><a href="javascript:topage(this.form,${wp})">${wp}</a></li></c:if>
+                                <c:if test="${pageView.currentpage!=wp}"><li><a href="javascript:topage('taskForm',${wp})">${wp}</a></li></c:if>
                             </c:forEach>
                         </ul>
                         <%@ include file="/WEB-INF/common/fenye.jsp" %>
