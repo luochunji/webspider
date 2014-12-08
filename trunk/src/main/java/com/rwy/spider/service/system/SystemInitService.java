@@ -67,6 +67,9 @@ public class SystemInitService {
     private void loadPlatForm() {
         List<PlatForm> platFormList = platFormService.getScrollData().getResultlist();
         for(PlatForm pf : platFormList){
+            if("0".equals(pf.getStatus())){
+                continue;
+            }
             Constant.PLATFORM_MAP.put(pf.getId(),pf);
         }
     }

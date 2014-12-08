@@ -90,7 +90,7 @@ public class ProductServiceImpl extends DaoSupport<Product> implements ProductSe
         if(bean.getFilterStore()!= null && !"".equals(bean.getFilterStore())){
             jpql.append(" and");
             if("ourStore".equals(bean.getFilterStore())){
-                jpql.append(" o.storeName in (select store.storeName from AgencyStore store)");
+                jpql.append(" o.storeName in (select store.storeName from AgencyStore store where store.agency.platFormId = o.platFormId)");
             }else if("otherStore".equals(bean.getFilterStore())){
                 jpql.append(" o.storeName not in (select store.storeName from AgencyStore store)");
             }
