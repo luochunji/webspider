@@ -77,9 +77,6 @@ public class SimpleServiceImpl {
         }
         for(Object key : Constant.PLATFORM_MAP.keySet()){
             PlatForm pf = (PlatForm) Constant.PLATFORM_MAP.get(key);
-            if("0".equals(pf.getStatus())){
-                continue;
-            }
             Object service = SpringUtils.getInstance().getBean(pf.getService());
             if(service instanceof BasePageProcessor){
                 BasePageProcessor bpp = (BasePageProcessor)service;
