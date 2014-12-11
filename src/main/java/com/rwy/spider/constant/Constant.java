@@ -2,9 +2,7 @@ package com.rwy.spider.constant;
 
 import com.rwy.spider.bean.system.SystemParams;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Luocj on 2014/10/28.
@@ -22,6 +20,16 @@ public class Constant {
     public static final Map<String, String> TAOBAO_VALID_MAP = new LinkedHashMap<String, String>();
 
     public static Map<String, SystemParams> SYSTEM_PARAMS = new HashMap();
+
+    public static final List<String> QUNAR_TICKET_TYPE = new ArrayList<String>();
+
+    public static final Map<String, String> QUNAR_VALID_MAP = new LinkedHashMap<String, String>();
+
+    public static Integer TEMP_DATA_CLEAR = 0;
+
+    public static Integer HISTORY_DATA_CLEAR = 0;
+
+    public static String EMAIL = "";
 
     static {
         //门票类别 成人票、儿童票
@@ -41,13 +49,17 @@ public class Constant {
         TAOBAO_VALID_MAP.put("NORMAL", "平日票");
         TAOBAO_VALID_MAP.put("WEEKEND", "周末票");
         TAOBAO_VALID_MAP.put("OTHER", "其他");
+
+        QUNAR_TICKET_TYPE.add("成人");
+        QUNAR_TICKET_TYPE.add("儿童");
+        QUNAR_TICKET_TYPE.add("学生");
+        QUNAR_TICKET_TYPE.add("老人");
+        QUNAR_TICKET_TYPE.add("亲子");
+        QUNAR_TICKET_TYPE.add("双人");
+        QUNAR_TICKET_TYPE.add("半价");
+
+        QUNAR_VALID_MAP.put("平日", "NORMAL");
+        QUNAR_VALID_MAP.put("周末", "WEEKEND");
     }
-
-    //    public static Integer TEMP_DATA_CLEAR = Integer.valueOf(SYSTEM_PARAMS.get("TEMP_DATA_CLEAR").getParamValue());
-    public static Integer TEMP_DATA_CLEAR = 0;
-
-    public static Integer HISTORY_DATA_CLEAR = 0;
-
-    public static String EMAIL = "";
 
 }

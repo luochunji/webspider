@@ -87,10 +87,11 @@ public class ProductServiceImpl extends DaoSupport<Product> implements ProductSe
         jpql.append(" select new com.rwy.spider.web.dto.ProductDto(o.id,o.taskType,s.scenicName, o.type, o.category, o.price, o.low_price, p.name, o.productUrl, o.storeName, o.timeStamp)");
         jpql.append(" from Scenic s,PlatForm p,"+DaoSupport.getEntityName(clazz)+" o");
         jpql.append(" where s.id = o.scenicId and p.id = o.platFormId");
+        jpql.append(" and p.status != '0'");
         if(bean.getFilterStore()!= null && !"".equals(bean.getFilterStore())){
             jpql.append(" and");
             if("ourStore".equals(bean.getFilterStore())){
-                jpql.append(" o.storeName in (select store.storeName from AgencyStore store where store.agency.platFormId = o.platFormId)");
+                jpql.append(" o.storeName in (select store.storeName from AgencyStore store)");
             }else if("otherStore".equals(bean.getFilterStore())){
                 jpql.append(" o.storeName not in (select store.storeName from AgencyStore store)");
             }

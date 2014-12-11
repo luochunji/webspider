@@ -8,6 +8,7 @@ import com.rwy.spider.bean.task.TaskExecution;
 import com.rwy.spider.bean.task.TaskScheduler;
 import com.rwy.spider.service.base.BasePageProcessor;
 import com.rwy.spider.service.product.ProductService;
+import com.rwy.spider.utils.StringFilterUtils;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +29,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * 淘宝手机专享数据抓取逻辑
+ *
  * Created by Luocj on 2014/10/23.
  */
 @Service("taobaoMobileSpiderService")
@@ -133,7 +136,7 @@ public class TaobaoMobileSpiderServiceImpl implements BasePageProcessor {
         productList = new ArrayList<Product>();
         for(Object obj : objs){
             Task task = (Task) obj;
-            String newUrl = MessageFormat.format(LIST_URL, getKeyword(task.getKeyword()),1);
+            String newUrl = MessageFormat.format(LIST_URL, StringFilterUtils.getKeyword(task.getKeyword()),1);
             Spider.create(this).addUrl(newUrl).thread(20).run();
             logger.info("*** 关键字【"+task.getKeyword()+"】抓取完毕，共抓取："+productList.size()+"条数据，正在保存中 ***");
             String id = task.getId();
@@ -152,13 +155,6 @@ public class TaobaoMobileSpiderServiceImpl implements BasePageProcessor {
             productList.clear();
         }
         productList = null;
-    }
-
-    private String getKeyword(String keyword) {
-        if(keyword.contains(" ")){
-            keyword = keyword.replace(" ", "+");
-        }
-        return keyword;
     }
 
 }
