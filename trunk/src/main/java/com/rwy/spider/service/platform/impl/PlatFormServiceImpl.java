@@ -3,9 +3,12 @@ package com.rwy.spider.service.platform.impl;
 import com.rwy.spider.bean.platform.PlatForm;
 import com.rwy.spider.service.base.DaoSupport;
 import com.rwy.spider.service.platform.PlatFormService;
+import com.rwy.spider.web.bean.PlatFormBean;
+import com.rwy.spider.web.common.PageView;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,5 +28,14 @@ public class PlatFormServiceImpl extends DaoSupport<PlatForm> implements PlatFor
             platFormMap.put(pf.getId(),pf.getName());
         }
         return platFormMap;
+    }
+
+    @Override
+    public PageView getPlatFormList(PlatFormBean bean, PageView pageView) {
+        //排序
+        LinkedHashMap<String, String> orderby = new LinkedHashMap<String, String>();
+        orderby.put("id","asc");
+        pageView.setQueryResult(getScrollData(pageView.getFirstResult(),pageView.getMaxresult(),null,null,orderby));
+        return pageView;
     }
 }

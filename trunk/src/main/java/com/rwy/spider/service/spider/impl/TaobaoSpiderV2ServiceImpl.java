@@ -32,6 +32,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * 淘宝数据抓取逻辑
+ *
  * Created by Luocj on 2014/10/23.
  */
 @Service("taobaoSpiderV2Service")
